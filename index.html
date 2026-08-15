@@ -54,7 +54,7 @@
   #main {
     flex: 1;
     padding: 24px 32px;
-    max-width: 1000px;
+    max-width: 900px;
   }
   #placeholder {
     color: var(--muted);
@@ -64,80 +64,50 @@
   h2.complaint-title {
     margin-top: 0;
   }
-  .panels {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .panel {
+  .accordion-section {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 16px 20px;
-    flex: 1;
-    min-width: 320px;
+    margin-bottom: 12px;
+    padding: 0 16px;
   }
-  .panel h3 {
-    margin-top: 0;
-    font-size: 16px;
-  }
-  .history-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px dashed var(--border);
-    font-size: 14px;
-    gap: 12px;
-  }
-  .history-item:last-child { border-bottom: none; }
-  .history-item .label { flex: 1; }
-  .toggle-group { display: flex; gap: 10px; flex-shrink: 0; }
-  .toggle-group label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  #historyManualWrap {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-  #historyManualWrap label {
-    display: block;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  #historyManualNotes {
-    width: 100%;
-    min-height: 60px;
-    font-family: inherit;
-    font-size: 14px;
-    padding: 8px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    resize: vertical;
-  }
-  #redflag-panel {
+  .accordion-section.redflag-section {
     background: var(--red-bg);
-    border: 1px solid var(--red-border);
+    border-color: var(--red-border);
   }
-  #redflag-panel h3 { color: var(--red); }
-  .redflag-item {
+  .accordion-section summary {
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 12px 0;
+    list-style: none;
+  }
+  .accordion-section summary::-webkit-details-marker { display: none; }
+  .accordion-section summary::before {
+    content: "▸ ";
+    color: var(--muted);
+  }
+  .accordion-section[open] summary::before {
+    content: "▾ ";
+  }
+  .accordion-section.redflag-section summary { color: var(--red); }
+  .accordion-body {
+    padding: 4px 0 14px;
+  }
+  .check-item {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 8px 0;
-    border-bottom: 1px dashed var(--red-border);
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
     font-size: 14px;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item input { margin-top: 3px; flex-shrink: 0; }
+  .redflag-section .check-item {
+    border-bottom-color: var(--red-border);
     color: var(--red);
   }
-  .redflag-item:last-child { border-bottom: none; }
-  .redflag-item input { margin-top: 3px; flex-shrink: 0; }
   #soap-section {
     margin-top: 24px;
     background: var(--card);
@@ -247,20 +217,41 @@
   <div id="placeholder">請從左側選單選擇主訴</div>
   <div id="content" style="display:none;">
     <h2 class="complaint-title" id="complaintTitle"></h2>
-    <div class="panels">
-      <div class="panel" id="history-panel">
-        <h3>病史詢問 checklist</h3>
-        <div id="historyList"></div>
-        <div id="historyManualWrap">
-          <label for="historyManualNotes">其他病史（手動輸入，會併入 S 段落）：</label>
-          <textarea id="historyManualNotes" placeholder="checklist 沒涵蓋到的病史細節..."></textarea>
-        </div>
-      </div>
-      <div class="panel" id="redflag-panel">
-        <h3>⚠ Red Flags</h3>
-        <div id="redflagList"></div>
-      </div>
-    </div>
+
+    <details class="accordion-section">
+      <summary>1. 主訴分析（OPQRST / SOCRATES）</summary>
+      <div class="accordion-body" id="ccList"></div>
+    </details>
+
+    <details class="accordion-section">
+      <summary>2. 相關系統回顧（Associated Symptoms / ROS）</summary>
+      <div class="accordion-body" id="rosList"></div>
+    </details>
+
+    <details class="accordion-section redflag-section">
+      <summary>3. ⚠ 紅旗症狀篩檢（Red Flags）</summary>
+      <div class="accordion-body" id="redflagList"></div>
+    </details>
+
+    <details class="accordion-section">
+      <summary>4. 過去病史（PMH）</summary>
+      <div class="accordion-body" id="pmhList"></div>
+    </details>
+
+    <details class="accordion-section">
+      <summary>5. 家族史（Family History）</summary>
+      <div class="accordion-body" id="fhList"></div>
+    </details>
+
+    <details class="accordion-section">
+      <summary>6. 社會史（Social History）</summary>
+      <div class="accordion-body" id="shList"></div>
+    </details>
+
+    <details class="accordion-section">
+      <summary>7. 心理社會層面（Psychosocial / ICE）</summary>
+      <div class="accordion-body" id="psList"></div>
+    </details>
 
     <div id="soap-section">
       <h3>SOAP 病例產生（英文）</h3>
@@ -284,7 +275,7 @@
       </details>
 
       <label for="manualSupplement" style="font-size:14px; color:var(--muted);">手動補充（會加入 S 段落）：</label>
-      <textarea id="manualSupplement" placeholder="輸入其他病史細節、身體檢查發現等..."></textarea>
+      <textarea id="manualSupplement" placeholder="輸入 checklist 沒涵蓋到的病史細節、身體檢查發現等..."></textarea>
       <div class="soap-actions">
         <button class="action" id="generateBtn">產生 SOAP 病例</button>
         <button class="action secondary" id="copyBtn">複製到剪貼簿</button>
@@ -296,81 +287,178 @@
 </div>
 
 <script>
+const SHARED = {
+  pmh: [
+    { id: "pmh_htn", label: "高血壓", textEn: "Hypertension." },
+    { id: "pmh_dm", label: "糖尿病", textEn: "Diabetes mellitus." },
+    { id: "pmh_hyperlipidemia", label: "高血脫", textEn: "Hyperlipidemia." },
+    { id: "pmh_cad_mi", label: "已知冠心病或心肌梗塞病史", textEn: "Known coronary artery disease or prior myocardial infarction." },
+    { id: "pmh_stroke", label: "中風／暫時性腦缺血病史", textEn: "Prior stroke/TIA." },
+    { id: "pmh_cancer", label: "癌症病史", textEn: "Known malignancy." },
+    { id: "pmh_asthma_copd", label: "氣喘／慢性肺病", textEn: "Asthma/COPD." },
+    { id: "pmh_ckd", label: "慢性胎臟病", textEn: "Chronic kidney disease." },
+    { id: "pmh_liver_disease", label: "肝臟疾病", textEn: "Liver disease." },
+    { id: "pmh_thyroid", label: "甲狀腕疾病", textEn: "Thyroid disease." },
+    { id: "pmh_anticoagulant", label: "目前服用抗凝血劑／抗血小板藥物", textEn: "Currently on anticoagulant/antiplatelet therapy." },
+    { id: "pmh_immunosuppressed", label: "免疫低下（化療、長期類固醇、器官移植）", textEn: "Immunocompromised (chemotherapy, chronic steroids, transplant)." },
+    { id: "pmh_recent_surgery", label: "近期手術史", textEn: "Recent surgery." },
+    { id: "pmh_similar_episode", label: "過去曾有類似症狀發作史", textEn: "Prior episode(s) of similar symptoms." },
+    { id: "pmh_pregnancy", label: "（女性）目前懷孕或可能懷孕", textEn: "Currently pregnant or possible pregnancy." }
+  ],
+  fh: [
+    { id: "fh_cad_sudden_death", label: "家族早發性心臟病或突死史", textEn: "Family history of early-onset coronary artery disease or sudden cardiac death." },
+    { id: "fh_cancer", label: "家族癌症病史", textEn: "Family history of malignancy." },
+    { id: "fh_stroke_neuro", label: "家族中風或神經系統疾病史", textEn: "Family history of stroke or neurologic disease." },
+    { id: "fh_gi_disease", label: "家族腸胃疾病史（如發炎性腸道疾病、大腸癌）", textEn: "Family history of gastrointestinal disease (e.g., IBD, colorectal cancer)." },
+    { id: "fh_clotting_bleeding", label: "家族血栓或出血傾向病史", textEn: "Family history of clotting or bleeding disorder." },
+    { id: "fh_other", label: "其他重大家族病史", textEn: "Other significant family history." }
+  ],
+  sh: [
+    { id: "sh_smoking", label: "吸菸（現在或過去）", textEn: "Current or past smoking." },
+    { id: "sh_alcohol", label: "飲酒（量大或長期）", textEn: "Alcohol use (notable quantity/frequency)." },
+    { id: "sh_illicit_drug", label: "使用違法藥物", textEn: "Illicit drug use." },
+    { id: "sh_occupation_exposure", label: "職業暴露（粉塵、化學物質、久坐等）", textEn: "Occupational exposure (dust, chemicals, prolonged sitting, etc.)." },
+    { id: "sh_sedentary", label: "缺乏運動／久坐生活型態", textEn: "Sedentary lifestyle/lack of exercise." },
+    { id: "sh_diet", label: "飲食習慣特殊（高油高鹹、不規律等）", textEn: "Notable dietary pattern (high fat/salt, irregular meals)." },
+    { id: "sh_recent_travel", label: "近期長途旅遊或久坐不動", textEn: "Recent travel or prolonged immobility." },
+    { id: "sh_living_alone", label: "獨居／社會支持不足", textEn: "Lives alone/limited social support." },
+    { id: "sh_stress", label: "工作或生活壓力大", textEn: "Significant work or life stress." }
+  ],
+  ps: [
+    { id: "ps_worried_serious", label: "病人擔心是嚴重疾病", textEn: "Patient is worried this represents a serious illness." },
+    { id: "ps_worried_death", label: "病人擔心突死／生命危險", textEn: "Patient fears a life-threatening event." },
+    { id: "ps_impact_function", label: "症狀已影響日常生活或工作", textEn: "Symptoms are affecting daily function/work." },
+    { id: "ps_mood", label: "近期情緒低落或焦慮", textEn: "Recent low mood or anxiety." },
+    { id: "ps_expects_tests", label: "病人期待安排進一步檢查", textEn: "Patient expects further diagnostic testing." },
+    { id: "ps_expects_referral", label: "病人期待轉診／專科會診", textEn: "Patient expects referral/specialist consultation." },
+    { id: "ps_expects_explanation", label: "病人主要想了解原因與衛教", textEn: "Patient mainly seeks explanation and reassurance." },
+    { id: "ps_prior_negative_workup", label: "過去做過類似檢查但未找到病因，因此更焦慮", textEn: "Prior work-up for similar symptoms was unremarkable, adding to patient's anxiety." }
+  ]
+};
+
 const COMPLAINTS = {
   chest: {
     name: "胸痛",
     nameEn: "chest pain",
     exam: ["Vitals (BP both arms, HR, RR, SpO2, Temp):", "General appearance:", "Cardiovascular exam:", "Respiratory exam:", "Extremities (edema, pulses):"],
-    history: [
-      { id: "onset_sudden", label: "是否為突然發作", pos: "The pain had a sudden onset.", neg: "The pain had a gradual onset." },
-      { id: "radiate", label: "是否放射到左手臂或下顎", pos: "Pain radiates to the left arm/jaw.", neg: "No radiation of pain to the left arm/jaw." },
-      { id: "diaphoresis", label: "是否合併冒冷汗", pos: "Associated diaphoresis.", neg: "Denies diaphoresis." },
-      { id: "dyspnea", label: "是否合併呼吸困難", pos: "Associated dyspnea.", neg: "Denies dyspnea." },
-      { id: "nausea", label: "是否合併噁心／嘔吐", pos: "Associated nausea/vomiting.", neg: "Denies nausea/vomiting." },
-      { id: "palpitation", label: "是否合併心悸", pos: "Associated palpitations.", neg: "Denies palpitations." },
-      { id: "positional", label: "姿勢或呼吸是否影響疼痛", pos: "Pain is affected by position or respiration (suggestive of pleuritic/musculoskeletal origin).", neg: "Pain is not affected by position or respiration." },
-      { id: "postprandial", label: "是否進食後產生或加重", pos: "Pain is related to meals (suggestive of GI origin).", neg: "Pain is not related to meals." },
-      { id: "exertional", label: "是否於運動/用力時誘發", pos: "Pain is provoked by exertion.", neg: "Pain is not related to exertion." },
-      { id: "anticoagulant", label: "是否服用抗凝血劑", pos: "Currently on anticoagulant therapy.", neg: "Denies anticoagulant use." }
+    cc: [
+      { id: "cc_onset_sudden", label: "突然發作", textEn: "Sudden onset of chest pain." },
+      { id: "cc_onset_gradual", label: "逐漸發作", textEn: "Gradual onset of chest pain." },
+      { id: "cc_quality_sharp", label: "性質：尖銳／針刺樣", textEn: "Sharp/stabbing quality." },
+      { id: "cc_quality_pressure", label: "性質：壓迫／斈重感", textEn: "Pressure/tightness sensation." },
+      { id: "cc_quality_tearing", label: "性質：撕裂樣", textEn: "Tearing quality." },
+      { id: "cc_quality_burning", label: "性質：灼熱感", textEn: "Burning quality." },
+      { id: "cc_radiate_arm", label: "放射至左手臂或下顎", textEn: "Radiates to the left arm/jaw." },
+      { id: "cc_radiate_back", label: "放射至背部", textEn: "Radiates to the back." },
+      { id: "cc_provoke_exertion", label: "運動／用力時誘發", textEn: "Provoked by exertion." },
+      { id: "cc_provoke_position", label: "姿勢或呼吸影響疼痛", textEn: "Affected by position or respiration." },
+      { id: "cc_provoke_meal", label: "進食後誘發或加重", textEn: "Provoked or worsened after meals." },
+      { id: "cc_relieve_rest", label: "休息後緩解", textEn: "Relieved by rest." },
+      { id: "cc_relieve_ntg", label: "使用舌下含片（硝化甘油）後緩解", textEn: "Relieved by sublingual nitroglycerin." },
+      { id: "cc_relieve_antacid", label: "服用制酸劑後緩解", textEn: "Relieved by antacids." },
+      { id: "cc_severity_severe", label: "疼痛程度嚴重（≥7/10）", textEn: "Severe intensity (≥7/10)." },
+      { id: "cc_duration_prolonged", label: "持續超過 20 分鐘未緩解", textEn: "Persisting >20 minutes without relief." }
+    ],
+    ros: [
+      { id: "ros_dyspnea", label: "呼吸困難", textEn: "Associated dyspnea." },
+      { id: "ros_diaphoresis", label: "冒冷汗", textEn: "Associated diaphoresis." },
+      { id: "ros_nausea", label: "噁心／嘔吐", textEn: "Associated nausea/vomiting." },
+      { id: "ros_palpitation", label: "心悸", textEn: "Associated palpitations." },
+      { id: "ros_syncope", label: "暈厥／暈眩前兆", textEn: "Associated syncope/presyncope." },
+      { id: "ros_cough", label: "咳嗽", textEn: "Associated cough." },
+      { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
+      { id: "ros_leg_swelling", label: "單側下肢腫脹", textEn: "Unilateral leg swelling." },
+      { id: "ros_orthopnea", label: "平躺時呼吸困難（端坐呼吸）", textEn: "Orthopnea (breathlessness lying flat)." },
+      { id: "ros_anxiety_trigger", label: "症狀與壓力／焦慮相關", textEn: "Symptom onset associated with stress/anxiety." }
     ],
     redFlags: [
-      { id: "rf_dissection", text: "劇烈撕裂樣疼痛，合併兩側血壓不對稱（疑主動脈剝離）", textEn: "Tearing chest pain with blood pressure discrepancy between arms (concern for aortic dissection)" },
-      { id: "rf_acs", text: "合併冒冷汗、噁心、放射至左臂或下顎（疑似急性冠心症）", textEn: "Diaphoresis, nausea, and radiation to the left arm/jaw (concern for acute coronary syndrome)" },
-      { id: "rf_pe", text: "合併呼吸困難、單側下肢腫脹（疑似肺栓塞）", textEn: "Dyspnea with unilateral leg swelling (concern for pulmonary embolism)" },
-      { id: "rf_vitals", text: "生命徵象不穩定（低血壓、心搏過速）", textEn: "Hemodynamic instability (hypotension, tachycardia)" },
-      { id: "rf_syncope", text: "合併意識改變或暈厥", textEn: "Altered mental status or syncope" },
-      { id: "rf_cad", text: "已知冠心病史或多重心血管危險因子", textEn: "Known coronary artery disease or multiple cardiovascular risk factors" }
+      { id: "rf_dissection", label: "劇烈撕裂樣疼痛，合併兩側血壓不對稱（疑主動脈剝離）", textEn: "Tearing chest pain with blood pressure discrepancy between arms (concern for aortic dissection)" },
+      { id: "rf_acs", label: "合併冒冷汗、噁心、放射至左臂或下顎（疑似急性冠心症）", textEn: "Diaphoresis, nausea, and radiation to the left arm/jaw (concern for acute coronary syndrome)" },
+      { id: "rf_pe", label: "合併呼吸困難、單側下肢腫脹（疑似肺栓塞）", textEn: "Dyspnea with unilateral leg swelling (concern for pulmonary embolism)" },
+      { id: "rf_vitals", label: "生命徵象不穩定（低血壓、心搏過速）", textEn: "Hemodynamic instability (hypotension, tachycardia)" },
+      { id: "rf_syncope", label: "合併意識改變或暈厥", textEn: "Altered mental status or syncope" },
+      { id: "rf_cad", label: "已知冠心病史或多重心血管危險因子", textEn: "Known coronary artery disease or multiple cardiovascular risk factors" }
     ]
   },
   headache: {
     name: "頭痛",
     nameEn: "headache",
     exam: ["Vitals (BP, HR, RR, Temp):", "General appearance:", "Neurological exam (mental status, cranial nerves, motor/sensory):", "Neck exam (meningismus):", "Fundoscopic exam:"],
-    history: [
-      { id: "thunderclap", label: "是否為突發劇烈頭痛（雷擊樣）", pos: "Sudden, severe onset (thunderclap headache).", neg: "Gradual onset, not thunderclap in nature." },
-      { id: "fever", label: "是否合併發燒", pos: "Associated fever.", neg: "Denies fever." },
-      { id: "neck_stiff", label: "是否合併頸部僵硬", pos: "Associated neck stiffness.", neg: "Denies neck stiffness." },
-      { id: "vomit", label: "是否合併嘔吐", pos: "Associated vomiting.", neg: "Denies vomiting." },
-      { id: "vision", label: "是否合併視力改變", pos: "Associated visual changes.", neg: "Denies visual changes." },
-      { id: "postural", label: "姿勢改變是否誘發或加重", pos: "Aggravated or triggered by positional change.", neg: "Not affected by positional change." },
-      { id: "valsalva", label: "咳嗽／用力是否加重", pos: "Aggravated by coughing or straining (Valsalva).", neg: "Not aggravated by coughing or straining." },
-      { id: "trauma", label: "近期是否有頭部外傷", pos: "Recent head trauma.", neg: "Denies recent head trauma." },
-      { id: "anticoagulant_h", label: "是否服用抗凝血劑", pos: "Currently on anticoagulant therapy.", neg: "Denies anticoagulant use." },
-      { id: "night_wake", label: "是否會半夜痛醒", pos: "Wakes the patient from sleep.", neg: "Does not wake the patient from sleep." }
+    cc: [
+      { id: "cc_onset_thunderclap", label: "突發劇烈（雷擊樣）", textEn: "Thunderclap onset, reaching maximal intensity within seconds." },
+      { id: "cc_onset_gradual", label: "逐漸發作", textEn: "Gradual onset." },
+      { id: "cc_quality_throbbing", label: "性質：搞動性／跳痛", textEn: "Throbbing/pulsatile quality." },
+      { id: "cc_quality_pressure", label: "性質：壓迫／束帶感", textEn: "Pressure/band-like quality." },
+      { id: "cc_quality_stabbing", label: "性質：刺痛", textEn: "Stabbing quality." },
+      { id: "cc_location_unilateral", label: "位置：單側", textEn: "Unilateral location." },
+      { id: "cc_location_bilateral", label: "位置：雙側", textEn: "Bilateral location." },
+      { id: "cc_provoke_valsalva", label: "咳嗽／用力時加重", textEn: "Worsened by coughing or straining (Valsalva)." },
+      { id: "cc_provoke_position", label: "姿勢改變時誘發或加重", textEn: "Worsened or triggered by positional change." },
+      { id: "cc_provoke_stress", label: "壓力大時誘發或加重", textEn: "Provoked or worsened by stress." },
+      { id: "cc_relieve_dark_quiet", label: "在暗處／安靜環境休息後緩解", textEn: "Relieved by rest in a dark, quiet room." },
+      { id: "cc_severity_worst_ever", label: "自述是此生最痛的一次頭痛", textEn: "Described as the worst headache of life." },
+      { id: "cc_recurrent_pattern", label: "過去曾有類似模式反覆發作", textEn: "Recurrent episodes with a similar pattern." }
+    ],
+    ros: [
+      { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
+      { id: "ros_neck_stiff", label: "頸部僵硬", textEn: "Associated neck stiffness." },
+      { id: "ros_vomit", label: "嘔吐", textEn: "Associated vomiting." },
+      { id: "ros_photophobia", label: "畜光", textEn: "Associated photophobia." },
+      { id: "ros_phonophobia", label: "怕吳", textEn: "Associated phonophobia." },
+      { id: "ros_visual_change", label: "視力改變", textEn: "Associated visual changes." },
+      { id: "ros_focal_weakness", label: "局部無力或麻木", textEn: "Associated focal weakness or numbness." },
+      { id: "ros_confusion", label: "意識混亂／改變", textEn: "Associated confusion or altered mental status." },
+      { id: "ros_scalp_tenderness", label: "頭皮／額部壓痛", textEn: "Scalp/temporal tenderness." },
+      { id: "ros_jaw_claudication", label: "咙嗼時下顎疼痛（下顎跚行）", textEn: "Jaw claudication with chewing." }
     ],
     redFlags: [
-      { id: "rf_thunder", text: "雷擊樣頭痛（數秒內達到最痛，疑似蜘蛛網膜下腔出血）", textEn: "Thunderclap headache reaching maximal intensity within seconds (concern for subarachnoid hemorrhage)" },
-      { id: "rf_meningitis", text: "發燒合併頸部僵硬（疑似腦膜炎）", textEn: "Fever with neck stiffness (concern for meningitis)" },
-      { id: "rf_neuro", text: "意識改變或神經學症狀（無力、麻木、言語不清）", textEn: "Altered mental status or focal neurologic deficits (weakness, numbness, dysarthria)" },
-      { id: "rf_age", text: "50 歲以上新發頭痛", textEn: "New-onset headache in a patient older than 50 years" },
-      { id: "rf_cancer", text: "已知癌症病史或免疫低下", textEn: "Known malignancy or immunocompromised state" },
-      { id: "rf_trauma_h", text: "頭部外傷後出現頭痛", textEn: "Headache following head trauma" },
-      { id: "rf_pregnancy", text: "懷孕或產後婦女新發頭痛", textEn: "New-onset headache during pregnancy or the postpartum period" }
+      { id: "rf_thunder", label: "雷擊樣頭痛（數秒內達到最痛，疑似蜘蛛網膜下腔出血）", textEn: "Thunderclap headache reaching maximal intensity within seconds (concern for subarachnoid hemorrhage)" },
+      { id: "rf_meningitis", label: "發燒合併頸部僵硬（疑似腦膜炎）", textEn: "Fever with neck stiffness (concern for meningitis)" },
+      { id: "rf_neuro", label: "意識改變或神經學症狀（無力、麻木、言語不清）", textEn: "Altered mental status or focal neurologic deficits (weakness, numbness, dysarthria)" },
+      { id: "rf_age", label: "50 歲以上新發頭痛", textEn: "New-onset headache in a patient older than 50 years" },
+      { id: "rf_cancer", label: "已知癌症病史或免疫低下", textEn: "Known malignancy or immunocompromised state" },
+      { id: "rf_trauma_h", label: "頭部外傷後出現頭痛", textEn: "Headache following head trauma" },
+      { id: "rf_pregnancy", label: "懷孕或產後婦女新發頭痛", textEn: "New-onset headache during pregnancy or the postpartum period" }
     ]
   },
   abdomen: {
     name: "腹痛",
     nameEn: "abdominal pain",
     exam: ["Vitals (BP, HR, RR, Temp):", "General appearance:", "Abdominal exam (tenderness, guarding, rebound, bowel sounds):", "Pelvic/rectal exam (if indicated):"],
-    history: [
-      { id: "migrating", label: "疼痛是否有轉移位置", pos: "Pain has migrated (e.g., periumbilical to right lower quadrant).", neg: "Pain location has remained constant." },
-      { id: "fever_a", label: "是否合併發燒", pos: "Associated fever.", neg: "Denies fever." },
-      { id: "nausea_a", label: "是否合併噁心／嘔吐", pos: "Associated nausea/vomiting.", neg: "Denies nausea/vomiting." },
-      { id: "melena", label: "是否合併血便或黑便", pos: "Associated melena/hematochezia.", neg: "Denies melena/hematochezia." },
-      { id: "hematemesis", label: "是否合併吐血", pos: "Associated hematemesis.", neg: "Denies hematemesis." },
-      { id: "pregnancy", label: "（女性）是否有懷孕可能或停經史", pos: "Possible pregnancy / abnormal menstrual history.", neg: "No possibility of pregnancy; menstrual history unremarkable." },
-      { id: "food_related", label: "進食是否會加重或緩解", pos: "Pain is related to meals.", neg: "Pain is not related to meals." },
-      { id: "bowel_habit", label: "排便習慣是否改變", pos: "Recent change in bowel habits.", neg: "No change in bowel habits." },
-      { id: "surgery", label: "近期是否有腹部手術史", pos: "Recent abdominal surgery.", neg: "Denies recent abdominal surgery." },
-      { id: "nsaid", label: "是否服用抗凝血劑或 NSAID", pos: "Currently on anticoagulant or NSAID therapy.", neg: "Denies anticoagulant or NSAID use." }
+    cc: [
+      { id: "cc_onset_sudden", label: "突然發作", textEn: "Sudden onset of abdominal pain." },
+      { id: "cc_onset_gradual", label: "逐漸發作", textEn: "Gradual onset of abdominal pain." },
+      { id: "cc_migrating", label: "疼痛有轉移位置（如臍周轉移至右下腹）", textEn: "Pain migrated (e.g., periumbilical to right lower quadrant)." },
+      { id: "cc_location_ruq", label: "位置：右上腹", textEn: "Right upper quadrant location." },
+      { id: "cc_location_epigastric", label: "位置：上腹部", textEn: "Epigastric location." },
+      { id: "cc_location_lower", label: "位置：下腹部／骨盆腔", textEn: "Lower abdominal/pelvic location." },
+      { id: "cc_quality_colicky", label: "性質：陣發性絞痛", textEn: "Colicky, intermittent quality." },
+      { id: "cc_quality_sharp_constant", label: "性質：持續性尖銳痛", textEn: "Sharp, constant quality." },
+      { id: "cc_quality_burning", label: "性質：灼熱感", textEn: "Burning quality." },
+      { id: "cc_provoke_meal", label: "進食後誘發或加重", textEn: "Provoked or worsened by meals." },
+      { id: "cc_provoke_movement", label: "移動或按壓時加重", textEn: "Worsened by movement or palpation." },
+      { id: "cc_relieve_meal", label: "進食後緩解", textEn: "Relieved by eating." },
+      { id: "cc_relieve_antacid", label: "服用制酸劑後緩解", textEn: "Relieved by antacids." },
+      { id: "cc_severity_severe", label: "疼痛程度嚴重（≥7/10）", textEn: "Severe intensity (≥7/10)." }
+    ],
+    ros: [
+      { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
+      { id: "ros_nausea_vomit", label: "噁心／嘔吐", textEn: "Associated nausea/vomiting." },
+      { id: "ros_melena_hematochezia", label: "血便或黑便", textEn: "Associated melena/hematochezia." },
+      { id: "ros_hematemesis", label: "吐血", textEn: "Associated hematemesis." },
+      { id: "ros_bowel_change", label: "排便習慣改變", textEn: "Recent change in bowel habits." },
+      { id: "ros_urinary_symptoms", label: "泋尿道症狀", textEn: "Associated urinary symptoms." },
+      { id: "ros_vaginal_bleeding", label: "異常陰道出血", textEn: "Associated abnormal vaginal bleeding." },
+      { id: "ros_anorexia_weight_loss", label: "食欲不振／體重減輕", textEn: "Associated anorexia/unintentional weight loss." },
+      { id: "ros_jaundice", label: "黃疍", textEn: "Associated jaundice." }
     ],
     redFlags: [
-      { id: "rf_peritonitis", text: "板狀腹、反彈痛（疑似腹膜炎）", textEn: "Board-like rigidity with rebound tenderness (concern for peritonitis)" },
-      { id: "rf_shock", text: "劇痛合併血壓下降、心搏過速（疑似休克）", textEn: "Severe pain with hypotension and tachycardia (concern for shock)" },
-      { id: "rf_gibleed", text: "合併吐血或血便", textEn: "Hematemesis or melena/hematochezia" },
-      { id: "rf_ectopic", text: "懷孕測試陽性合併腹痛（需排除子宮外孕）", textEn: "Positive pregnancy test with abdominal pain (rule out ectopic pregnancy)" },
-      { id: "rf_ischemia", text: "老年人合併腹痛與血管疾病史（疑似腸繫膜缺血）", textEn: "Elderly patient with vascular disease history (concern for mesenteric ischemia)" },
-      { id: "rf_unclear_fever", text: "合併不明原因發燒與腹痛", textEn: "Unexplained fever with abdominal pain" }
+      { id: "rf_peritonitis", label: "板狀腹、反彈痛（疑似腹膜炎）", textEn: "Board-like rigidity with rebound tenderness (concern for peritonitis)" },
+      { id: "rf_shock", label: "劇痛合併血壓下降、心搏過速（疑似休克）", textEn: "Severe pain with hypotension and tachycardia (concern for shock)" },
+      { id: "rf_gibleed", label: "合併吐血或血便", textEn: "Hematemesis or melena/hematochezia" },
+      { id: "rf_ectopic", label: "懷孕測試陽性合併腹痛（需排除子宮外孕）", textEn: "Positive pregnancy test with abdominal pain (rule out ectopic pregnancy)" },
+      { id: "rf_ischemia", label: "老年人合併腹痛與血管疾病史（疑似腸繫膜缺血）", textEn: "Elderly patient with vascular disease history (concern for mesenteric ischemia)" },
+      { id: "rf_unclear_fever", label: "合併不明原因發燒與腹痛", textEn: "Unexplained fever with abdominal pain" }
     ]
   }
 };
@@ -380,13 +468,14 @@ const CONDITIONS = {
     {
       name: "Acute Coronary Syndrome (ACS)",
       criteria: [
-        { kind: "history", id: "radiate", value: "pos", weight: 2 },
-        { kind: "history", id: "diaphoresis", value: "pos", weight: 2 },
-        { kind: "history", id: "nausea", value: "pos", weight: 1 },
-        { kind: "history", id: "exertional", value: "pos", weight: 1 },
-        { kind: "redflag", id: "rf_acs", weight: 4 },
-        { kind: "redflag", id: "rf_cad", weight: 2 },
-        { kind: "redflag", id: "rf_vitals", weight: 1 }
+        { id: "cc_radiate_arm", weight: 2 },
+        { id: "ros_diaphoresis", weight: 2 },
+        { id: "ros_nausea", weight: 1 },
+        { id: "cc_provoke_exertion", weight: 1 },
+        { id: "rf_acs", weight: 4 },
+        { id: "rf_cad", weight: 2 },
+        { id: "rf_vitals", weight: 1 },
+        { id: "pmh_cad_mi", weight: 2 }
       ],
       workup: ["12-lead ECG", "Serial cardiac troponin", "Chest X-ray", "Consider cardiology consult"],
       treatment: ["Aspirin 325 mg (if no contraindication)", "Oxygen if SpO2 < 94%", "Sublingual nitroglycerin if no contraindication", "Urgent transfer to ED/cardiology"]
@@ -394,9 +483,11 @@ const CONDITIONS = {
     {
       name: "Aortic Dissection",
       criteria: [
-        { kind: "history", id: "onset_sudden", value: "pos", weight: 2 },
-        { kind: "redflag", id: "rf_dissection", weight: 5 },
-        { kind: "redflag", id: "rf_vitals", weight: 2 }
+        { id: "cc_onset_sudden", weight: 2 },
+        { id: "cc_quality_tearing", weight: 3 },
+        { id: "cc_radiate_back", weight: 2 },
+        { id: "rf_dissection", weight: 5 },
+        { id: "rf_vitals", weight: 2 }
       ],
       workup: ["CT angiography of chest/abdomen", "Blood pressure measurement in both arms", "Chest X-ray (widened mediastinum)"],
       treatment: ["Emergent surgical/cardiothoracic consult", "IV beta-blocker for heart rate and blood pressure control", "Immediate transfer to a tertiary center"]
@@ -404,8 +495,10 @@ const CONDITIONS = {
     {
       name: "Pulmonary Embolism",
       criteria: [
-        { kind: "history", id: "dyspnea", value: "pos", weight: 2 },
-        { kind: "redflag", id: "rf_pe", weight: 5 }
+        { id: "ros_dyspnea", weight: 2 },
+        { id: "ros_leg_swelling", weight: 3 },
+        { id: "rf_pe", weight: 5 },
+        { id: "pmh_recent_surgery", weight: 1 }
       ],
       workup: ["D-dimer", "CT pulmonary angiography", "ECG", "Lower extremity venous Doppler ultrasound"],
       treatment: ["Oxygen support", "Anticoagulation per protocol if confirmed", "Urgent referral to ED"]
@@ -413,9 +506,8 @@ const CONDITIONS = {
     {
       name: "Musculoskeletal Chest Pain",
       criteria: [
-        { kind: "history", id: "positional", value: "pos", weight: 2 },
-        { kind: "history", id: "exertional", value: "neg", weight: 1 },
-        { kind: "history", id: "radiate", value: "neg", weight: 1 }
+        { id: "cc_provoke_position", weight: 3 },
+        { id: "cc_quality_sharp", weight: 1 }
       ],
       workup: ["Usually a clinical diagnosis", "Chest X-ray if trauma history"],
       treatment: ["NSAIDs", "Activity modification", "Reassurance"]
@@ -423,8 +515,9 @@ const CONDITIONS = {
     {
       name: "Gastroesophageal Reflux Disease (GERD)",
       criteria: [
-        { kind: "history", id: "postprandial", value: "pos", weight: 2 },
-        { kind: "history", id: "positional", value: "neg", weight: 1 }
+        { id: "cc_provoke_meal", weight: 2 },
+        { id: "cc_quality_burning", weight: 2 },
+        { id: "cc_relieve_antacid", weight: 3 }
       ],
       workup: ["Clinical diagnosis", "Trial of PPI", "EGD if refractory or alarm features present"],
       treatment: ["PPI trial", "Lifestyle and dietary modification"]
@@ -434,8 +527,9 @@ const CONDITIONS = {
     {
       name: "Subarachnoid Hemorrhage",
       criteria: [
-        { kind: "history", id: "thunderclap", value: "pos", weight: 3 },
-        { kind: "redflag", id: "rf_thunder", weight: 5 }
+        { id: "cc_onset_thunderclap", weight: 3 },
+        { id: "cc_severity_worst_ever", weight: 2 },
+        { id: "rf_thunder", weight: 5 }
       ],
       workup: ["Non-contrast CT head", "Lumbar puncture if CT negative (xanthochromia)", "CT angiography head if aneurysm suspected"],
       treatment: ["Emergent neurosurgical consult", "Blood pressure control", "Immediate transfer to ED"]
@@ -443,9 +537,9 @@ const CONDITIONS = {
     {
       name: "Meningitis",
       criteria: [
-        { kind: "history", id: "fever", value: "pos", weight: 2 },
-        { kind: "history", id: "neck_stiff", value: "pos", weight: 2 },
-        { kind: "redflag", id: "rf_meningitis", weight: 5 }
+        { id: "ros_fever", weight: 2 },
+        { id: "ros_neck_stiff", weight: 2 },
+        { id: "rf_meningitis", weight: 5 }
       ],
       workup: ["CT head prior to LP if indicated", "Lumbar puncture", "Blood cultures", "CBC"],
       treatment: ["Empiric IV antibiotics ± dexamethasone", "Emergent transfer to ED"]
@@ -453,12 +547,11 @@ const CONDITIONS = {
     {
       name: "Space-Occupying Lesion / Idiopathic Intracranial Hypertension",
       criteria: [
-        { kind: "history", id: "postural", value: "pos", weight: 2 },
-        { kind: "history", id: "valsalva", value: "pos", weight: 2 },
-        { kind: "history", id: "vomit", value: "pos", weight: 1 },
-        { kind: "history", id: "night_wake", value: "pos", weight: 1 },
-        { kind: "redflag", id: "rf_age", weight: 2 },
-        { kind: "redflag", id: "rf_cancer", weight: 3 }
+        { id: "cc_provoke_position", weight: 2 },
+        { id: "cc_provoke_valsalva", weight: 2 },
+        { id: "ros_vomit", weight: 1 },
+        { id: "rf_age", weight: 2 },
+        { id: "rf_cancer", weight: 3 }
       ],
       workup: ["MRI brain", "Fundoscopic exam for papilledema"],
       treatment: ["Neurology referral", "Consider LP opening pressure if IIH suspected"]
@@ -466,8 +559,10 @@ const CONDITIONS = {
     {
       name: "Giant Cell (Temporal) Arteritis",
       criteria: [
-        { kind: "history", id: "vision", value: "pos", weight: 1 },
-        { kind: "redflag", id: "rf_age", weight: 2 }
+        { id: "ros_scalp_tenderness", weight: 3 },
+        { id: "ros_jaw_claudication", weight: 3 },
+        { id: "rf_age", weight: 2 },
+        { id: "ros_visual_change", weight: 1 }
       ],
       workup: ["ESR/CRP", "Temporal artery biopsy"],
       treatment: ["High-dose corticosteroids started urgently to prevent vision loss", "Rheumatology referral"]
@@ -475,9 +570,11 @@ const CONDITIONS = {
     {
       name: "Migraine",
       criteria: [
-        { kind: "history", id: "vision", value: "pos", weight: 1 },
-        { kind: "history", id: "thunderclap", value: "neg", weight: 1 },
-        { kind: "history", id: "postural", value: "neg", weight: 1 }
+        { id: "ros_photophobia", weight: 1 },
+        { id: "ros_phonophobia", weight: 1 },
+        { id: "cc_quality_throbbing", weight: 2 },
+        { id: "cc_relieve_dark_quiet", weight: 2 },
+        { id: "cc_recurrent_pattern", weight: 1 }
       ],
       workup: ["Clinical diagnosis", "Neuroimaging only if atypical features present"],
       treatment: ["NSAIDs/triptans", "Antiemetics as needed", "Trigger avoidance"]
@@ -485,10 +582,9 @@ const CONDITIONS = {
     {
       name: "Tension-Type Headache",
       criteria: [
-        { kind: "history", id: "fever", value: "neg", weight: 1 },
-        { kind: "history", id: "neck_stiff", value: "neg", weight: 1 },
-        { kind: "history", id: "thunderclap", value: "neg", weight: 1 },
-        { kind: "history", id: "vomit", value: "neg", weight: 1 }
+        { id: "cc_quality_pressure", weight: 2 },
+        { id: "cc_location_bilateral", weight: 1 },
+        { id: "cc_recurrent_pattern", weight: 1 }
       ],
       workup: ["No imaging indicated if no red flags present"],
       treatment: ["NSAIDs/acetaminophen", "Stress management"]
@@ -498,10 +594,11 @@ const CONDITIONS = {
     {
       name: "Acute Appendicitis",
       criteria: [
-        { kind: "history", id: "migrating", value: "pos", weight: 2 },
-        { kind: "history", id: "fever_a", value: "pos", weight: 1 },
-        { kind: "history", id: "nausea_a", value: "pos", weight: 1 },
-        { kind: "redflag", id: "rf_peritonitis", weight: 3 }
+        { id: "cc_migrating", weight: 3 },
+        { id: "cc_location_lower", weight: 1 },
+        { id: "ros_fever", weight: 1 },
+        { id: "ros_nausea_vomit", weight: 1 },
+        { id: "rf_peritonitis", weight: 3 }
       ],
       workup: ["CBC", "CRP", "Abdominal/pelvic ultrasound or CT", "Surgical consult"],
       treatment: ["NPO", "IV fluids", "Surgical consult for appendectomy", "Antibiotics per protocol"]
@@ -509,8 +606,8 @@ const CONDITIONS = {
     {
       name: "Ectopic Pregnancy",
       criteria: [
-        { kind: "history", id: "pregnancy", value: "pos", weight: 3 },
-        { kind: "redflag", id: "rf_ectopic", weight: 5 }
+        { id: "pmh_pregnancy", weight: 3 },
+        { id: "rf_ectopic", weight: 5 }
       ],
       workup: ["Urine/serum beta-hCG", "Transvaginal ultrasound", "Type & screen"],
       treatment: ["Emergent OB-GYN consult", "Consider methotrexate vs. surgical management"]
@@ -518,10 +615,11 @@ const CONDITIONS = {
     {
       name: "Upper GI Bleed / Peptic Ulcer Disease",
       criteria: [
-        { kind: "history", id: "melena", value: "pos", weight: 2 },
-        { kind: "history", id: "hematemesis", value: "pos", weight: 2 },
-        { kind: "history", id: "nsaid", value: "pos", weight: 1 },
-        { kind: "redflag", id: "rf_gibleed", weight: 4 }
+        { id: "ros_melena_hematochezia", weight: 2 },
+        { id: "ros_hematemesis", weight: 2 },
+        { id: "pmh_anticoagulant", weight: 1 },
+        { id: "cc_location_epigastric", weight: 1 },
+        { id: "rf_gibleed", weight: 4 }
       ],
       workup: ["CBC", "Coagulation panel", "Type & crossmatch", "Upper endoscopy"],
       treatment: ["IV proton pump inhibitor", "Fluid resuscitation", "GI consult", "Hold anticoagulants/NSAIDs"]
@@ -529,7 +627,9 @@ const CONDITIONS = {
     {
       name: "Mesenteric Ischemia",
       criteria: [
-        { kind: "redflag", id: "rf_ischemia", weight: 5 }
+        { id: "rf_ischemia", weight: 5 },
+        { id: "pmh_cad_mi", weight: 2 },
+        { id: "cc_severity_severe", weight: 1 }
       ],
       workup: ["CT angiography abdomen", "Serum lactate", "CBC"],
       treatment: ["Emergent surgical consult", "Bowel rest", "IV fluid resuscitation"]
@@ -537,7 +637,8 @@ const CONDITIONS = {
     {
       name: "Perforated Viscus / Peritonitis",
       criteria: [
-        { kind: "redflag", id: "rf_peritonitis", weight: 5 }
+        { id: "rf_peritonitis", weight: 5 },
+        { id: "cc_onset_sudden", weight: 1 }
       ],
       workup: ["Upright chest X-ray (free air)", "CT abdomen/pelvis", "CBC", "Serum lactate"],
       treatment: ["NPO", "IV fluids", "Broad-spectrum antibiotics", "Emergent surgical consult"]
@@ -545,9 +646,10 @@ const CONDITIONS = {
     {
       name: "Biliary Colic / Cholecystitis",
       criteria: [
-        { kind: "history", id: "food_related", value: "pos", weight: 2 },
-        { kind: "history", id: "fever_a", value: "pos", weight: 1 },
-        { kind: "history", id: "nausea_a", value: "pos", weight: 1 }
+        { id: "cc_location_ruq", weight: 2 },
+        { id: "cc_provoke_meal", weight: 2 },
+        { id: "ros_nausea_vomit", weight: 1 },
+        { id: "ros_jaundice", weight: 1 }
       ],
       workup: ["Abdominal ultrasound (RUQ)", "Liver function tests", "CBC"],
       treatment: ["Analgesia", "NPO if cholecystitis suspected", "Surgical consult for cholecystectomy if confirmed"]
@@ -555,9 +657,9 @@ const CONDITIONS = {
     {
       name: "Nonspecific Abdominal Pain / Gastroenteritis",
       criteria: [
-        { kind: "history", id: "bowel_habit", value: "pos", weight: 1 },
-        { kind: "history", id: "migrating", value: "neg", weight: 1 },
-        { kind: "history", id: "fever_a", value: "pos", weight: 1 }
+        { id: "ros_bowel_change", weight: 1 },
+        { id: "ros_fever", weight: 1 },
+        { id: "cc_quality_colicky", weight: 1 }
       ],
       workup: ["Stool studies if diarrhea present", "Basic labs as clinically indicated"],
       treatment: ["Supportive care", "Hydration", "Symptomatic treatment"]
@@ -571,6 +673,20 @@ document.querySelectorAll(".complaint-btn").forEach(btn => {
   btn.addEventListener("click", () => selectComplaint(btn.dataset.key));
 });
 
+function renderChecklist(containerId, items) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  items.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "check-item";
+    row.innerHTML = `
+      <input type="checkbox" id="${item.id}" value="${item.id}">
+      <label for="${item.id}">${item.label}</label>
+    `;
+    el.appendChild(row);
+  });
+}
+
 function selectComplaint(key) {
   currentKey = key;
   document.querySelectorAll(".complaint-btn").forEach(b => {
@@ -582,34 +698,16 @@ function selectComplaint(key) {
   document.getElementById("content").style.display = "block";
   document.getElementById("complaintTitle").textContent = "主訴：" + data.name;
 
-  const historyList = document.getElementById("historyList");
-  historyList.innerHTML = "";
-  data.history.forEach(item => {
-    const row = document.createElement("div");
-    row.className = "history-item";
-    row.innerHTML = `
-      <span class="label">${item.label}</span>
-      <span class="toggle-group">
-        <label><input type="radio" name="h_${item.id}" value="pos"> 有</label>
-        <label><input type="radio" name="h_${item.id}" value="neg"> 無</label>
-      </span>
-    `;
-    historyList.appendChild(row);
-  });
+  renderChecklist("ccList", data.cc);
+  renderChecklist("rosList", data.ros);
+  renderChecklist("redflagList", data.redFlags);
+  renderChecklist("pmhList", SHARED.pmh);
+  renderChecklist("fhList", SHARED.fh);
+  renderChecklist("shList", SHARED.sh);
+  renderChecklist("psList", SHARED.ps);
 
-  const redflagList = document.getElementById("redflagList");
-  redflagList.innerHTML = "";
-  data.redFlags.forEach(item => {
-    const row = document.createElement("div");
-    row.className = "redflag-item";
-    row.innerHTML = `
-      <input type="checkbox" id="rf_${item.id}" value="${item.id}">
-      <label for="rf_${item.id}">${item.text}</label>
-    `;
-    redflagList.appendChild(row);
-  });
+  document.querySelectorAll("#content > details.accordion-section").forEach(d => { d.open = false; });
 
-  document.getElementById("historyManualNotes").value = "";
   document.getElementById("manualSupplement").value = "";
   document.getElementById("soapOutput").value = "";
   document.getElementById("copyStatus").textContent = "";
@@ -662,19 +760,21 @@ async function translateToMedicalEnglish(text) {
   return translated.trim();
 }
 
+function collectChecked(items) {
+  return items.filter(it => {
+    const el = document.getElementById(it.id);
+    return el && el.checked;
+  }).map(it => it.textEn);
+}
+
 function scoreConditions(key) {
   const conditions = CONDITIONS[key] || [];
   return conditions
     .map(c => {
       let score = 0;
       c.criteria.forEach(cr => {
-        if (cr.kind === "history") {
-          const checked = document.querySelector(`input[name="h_${cr.id}"]:checked`);
-          if (checked && checked.value === cr.value) score += cr.weight;
-        } else {
-          const cb = document.getElementById(`rf_${cr.id}`);
-          if (cb && cb.checked) score += cr.weight;
-        }
+        const el = document.getElementById(cr.id);
+        if (el && el.checked) score += cr.weight;
       });
       return { name: c.name, workup: c.workup, treatment: c.treatment, score };
     })
@@ -689,37 +789,24 @@ async function generateSOAP() {
   const generateBtn = document.getElementById("generateBtn");
   const originalLabel = generateBtn.textContent;
 
-  const findings = [];
-  data.history.forEach(item => {
-    const checked = document.querySelector(`input[name="h_${item.id}"]:checked`);
-    if (checked) {
-      findings.push(checked.value === "pos" ? item.pos : item.neg);
-    }
-  });
+  const ccFindings = collectChecked(data.cc);
+  const rosFindings = collectChecked(data.ros);
+  const rfFindings = collectChecked(data.redFlags);
+  const pmhFindings = collectChecked(SHARED.pmh);
+  const fhFindings = collectChecked(SHARED.fh);
+  const shFindings = collectChecked(SHARED.sh);
+  const psFindings = collectChecked(SHARED.ps);
 
-  const activeRedFlags = [];
-  data.redFlags.forEach(item => {
-    const cb = document.getElementById(`rf_${item.id}`);
-    if (cb && cb.checked) activeRedFlags.push(item.textEn);
-  });
-
-  const historyManualRaw = document.getElementById("historyManualNotes").value.trim();
   const manualRaw = document.getElementById("manualSupplement").value.trim();
-
-  let historyManual = historyManualRaw;
   let manual = manualRaw;
 
-  if (containsChinese(historyManualRaw) || containsChinese(manualRaw)) {
+  if (containsChinese(manualRaw)) {
     generateBtn.disabled = true;
     generateBtn.textContent = "翻譯中...";
     try {
-      [historyManual, manual] = await Promise.all([
-        translateToMedicalEnglish(historyManualRaw),
-        translateToMedicalEnglish(manualRaw)
-      ]);
+      manual = await translateToMedicalEnglish(manualRaw);
     } catch (err) {
       alert("翻譯失敗，將以原文併入病例。\n" + err.message);
-      historyManual = historyManualRaw;
       manual = manualRaw;
     } finally {
       generateBtn.disabled = false;
@@ -729,14 +816,22 @@ async function generateSOAP() {
 
   // --- S ---
   let sText = `Chief Complaint: ${data.nameEn.charAt(0).toUpperCase() + data.nameEn.slice(1)}.\n\n`;
-  sText += "History of Present Illness:\n";
-  sText += findings.length > 0 ? findings.join(" ") : "(No checklist items selected.)";
-  if (historyManual) {
-    sText += " " + historyManual;
+
+  sText += "History of Present Illness (OPQRST/SOCRATES):\n";
+  sText += ccFindings.length > 0 ? ccFindings.join(" ") : "(No structured findings selected.)";
+
+  sText += "\n\nAssociated Symptoms (ROS):\n";
+  sText += rosFindings.length > 0 ? rosFindings.join(" ") : "(No pertinent associated symptoms selected.)";
+
+  if (rfFindings.length > 0) {
+    sText += "\n\nPertinent red flag(s) noted: " + rfFindings.join("; ") + ".";
   }
-  if (activeRedFlags.length > 0) {
-    sText += "\n\nPertinent red flag(s) noted: " + activeRedFlags.join("; ") + ".";
-  }
+
+  sText += "\n\nPast Medical History: " + (pmhFindings.length > 0 ? pmhFindings.join(" ") : "Noncontributory / not reported.");
+  sText += "\nFamily History: " + (fhFindings.length > 0 ? fhFindings.join(" ") : "Noncontributory / not reported.");
+  sText += "\nSocial History: " + (shFindings.length > 0 ? shFindings.join(" ") : "Noncontributory / not reported.");
+  sText += "\nPsychosocial (Ideas/Concerns/Expectations): " + (psFindings.length > 0 ? psFindings.join(" ") : "Not specifically assessed.");
+
   if (manual) {
     sText += "\n\nAdditional notes: " + manual;
   }
