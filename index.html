@@ -291,14 +291,14 @@ const SHARED = {
   pmh: [
     { id: "pmh_htn", label: "高血壓", textEn: "Hypertension." },
     { id: "pmh_dm", label: "糖尿病", textEn: "Diabetes mellitus." },
-    { id: "pmh_hyperlipidemia", label: "高血脫", textEn: "Hyperlipidemia." },
+    { id: "pmh_hyperlipidemia", label: "高血脂", textEn: "Hyperlipidemia." },
     { id: "pmh_cad_mi", label: "已知冠心病或心肌梗塞病史", textEn: "Known coronary artery disease or prior myocardial infarction." },
     { id: "pmh_stroke", label: "中風／暫時性腦缺血病史", textEn: "Prior stroke/TIA." },
     { id: "pmh_cancer", label: "癌症病史", textEn: "Known malignancy." },
     { id: "pmh_asthma_copd", label: "氣喘／慢性肺病", textEn: "Asthma/COPD." },
-    { id: "pmh_ckd", label: "慢性胎臟病", textEn: "Chronic kidney disease." },
+    { id: "pmh_ckd", label: "慢性腎臟病", textEn: "Chronic kidney disease." },
     { id: "pmh_liver_disease", label: "肝臟疾病", textEn: "Liver disease." },
-    { id: "pmh_thyroid", label: "甲狀腕疾病", textEn: "Thyroid disease." },
+    { id: "pmh_thyroid", label: "甲狀腺疾病", textEn: "Thyroid disease." },
     { id: "pmh_anticoagulant", label: "目前服用抗凝血劑／抗血小板藥物", textEn: "Currently on anticoagulant/antiplatelet therapy." },
     { id: "pmh_immunosuppressed", label: "免疫低下（化療、長期類固醇、器官移植）", textEn: "Immunocompromised (chemotherapy, chronic steroids, transplant)." },
     { id: "pmh_recent_surgery", label: "近期手術史", textEn: "Recent surgery." },
@@ -306,7 +306,7 @@ const SHARED = {
     { id: "pmh_pregnancy", label: "（女性）目前懷孕或可能懷孕", textEn: "Currently pregnant or possible pregnancy." }
   ],
   fh: [
-    { id: "fh_cad_sudden_death", label: "家族早發性心臟病或突死史", textEn: "Family history of early-onset coronary artery disease or sudden cardiac death." },
+    { id: "fh_cad_sudden_death", label: "家族早發性心臟病或猝死史", textEn: "Family history of early-onset coronary artery disease or sudden cardiac death." },
     { id: "fh_cancer", label: "家族癌症病史", textEn: "Family history of malignancy." },
     { id: "fh_stroke_neuro", label: "家族中風或神經系統疾病史", textEn: "Family history of stroke or neurologic disease." },
     { id: "fh_gi_disease", label: "家族腸胃疾病史（如發炎性腸道疾病、大腸癌）", textEn: "Family history of gastrointestinal disease (e.g., IBD, colorectal cancer)." },
@@ -319,14 +319,14 @@ const SHARED = {
     { id: "sh_illicit_drug", label: "使用違法藥物", textEn: "Illicit drug use." },
     { id: "sh_occupation_exposure", label: "職業暴露（粉塵、化學物質、久坐等）", textEn: "Occupational exposure (dust, chemicals, prolonged sitting, etc.)." },
     { id: "sh_sedentary", label: "缺乏運動／久坐生活型態", textEn: "Sedentary lifestyle/lack of exercise." },
-    { id: "sh_diet", label: "飲食習慣特殊（高油高鹹、不規律等）", textEn: "Notable dietary pattern (high fat/salt, irregular meals)." },
+    { id: "sh_diet", label: "飲食習慣特殊（高油高鹽、不規律等）", textEn: "Notable dietary pattern (high fat/salt, irregular meals)." },
     { id: "sh_recent_travel", label: "近期長途旅遊或久坐不動", textEn: "Recent travel or prolonged immobility." },
     { id: "sh_living_alone", label: "獨居／社會支持不足", textEn: "Lives alone/limited social support." },
     { id: "sh_stress", label: "工作或生活壓力大", textEn: "Significant work or life stress." }
   ],
   ps: [
     { id: "ps_worried_serious", label: "病人擔心是嚴重疾病", textEn: "Patient is worried this represents a serious illness." },
-    { id: "ps_worried_death", label: "病人擔心突死／生命危險", textEn: "Patient fears a life-threatening event." },
+    { id: "ps_worried_death", label: "病人擔心猝死／生命危險", textEn: "Patient fears a life-threatening event." },
     { id: "ps_impact_function", label: "症狀已影響日常生活或工作", textEn: "Symptoms are affecting daily function/work." },
     { id: "ps_mood", label: "近期情緒低落或焦慮", textEn: "Recent low mood or anxiety." },
     { id: "ps_expects_tests", label: "病人期待安排進一步檢查", textEn: "Patient expects further diagnostic testing." },
@@ -345,7 +345,7 @@ const COMPLAINTS = {
       { id: "cc_onset_sudden", label: "突然發作", textEn: "Sudden onset of chest pain." },
       { id: "cc_onset_gradual", label: "逐漸發作", textEn: "Gradual onset of chest pain." },
       { id: "cc_quality_sharp", label: "性質：尖銳／針刺樣", textEn: "Sharp/stabbing quality." },
-      { id: "cc_quality_pressure", label: "性質：壓迫／斈重感", textEn: "Pressure/tightness sensation." },
+      { id: "cc_quality_pressure", label: "性質：壓迫／悶重感", textEn: "Pressure/tightness sensation." },
       { id: "cc_quality_tearing", label: "性質：撕裂樣", textEn: "Tearing quality." },
       { id: "cc_quality_burning", label: "性質：灼熱感", textEn: "Burning quality." },
       { id: "cc_radiate_arm", label: "放射至左手臂或下顎", textEn: "Radiates to the left arm/jaw." },
@@ -387,7 +387,7 @@ const COMPLAINTS = {
     cc: [
       { id: "cc_onset_thunderclap", label: "突發劇烈（雷擊樣）", textEn: "Thunderclap onset, reaching maximal intensity within seconds." },
       { id: "cc_onset_gradual", label: "逐漸發作", textEn: "Gradual onset." },
-      { id: "cc_quality_throbbing", label: "性質：搞動性／跳痛", textEn: "Throbbing/pulsatile quality." },
+      { id: "cc_quality_throbbing", label: "性質：搏動性／跳痛", textEn: "Throbbing/pulsatile quality." },
       { id: "cc_quality_pressure", label: "性質：壓迫／束帶感", textEn: "Pressure/band-like quality." },
       { id: "cc_quality_stabbing", label: "性質：刺痛", textEn: "Stabbing quality." },
       { id: "cc_location_unilateral", label: "位置：單側", textEn: "Unilateral location." },
@@ -403,13 +403,13 @@ const COMPLAINTS = {
       { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
       { id: "ros_neck_stiff", label: "頸部僵硬", textEn: "Associated neck stiffness." },
       { id: "ros_vomit", label: "嘔吐", textEn: "Associated vomiting." },
-      { id: "ros_photophobia", label: "畜光", textEn: "Associated photophobia." },
-      { id: "ros_phonophobia", label: "怕吳", textEn: "Associated phonophobia." },
+      { id: "ros_photophobia", label: "畏光", textEn: "Associated photophobia." },
+      { id: "ros_phonophobia", label: "怕吵", textEn: "Associated phonophobia." },
       { id: "ros_visual_change", label: "視力改變", textEn: "Associated visual changes." },
       { id: "ros_focal_weakness", label: "局部無力或麻木", textEn: "Associated focal weakness or numbness." },
       { id: "ros_confusion", label: "意識混亂／改變", textEn: "Associated confusion or altered mental status." },
-      { id: "ros_scalp_tenderness", label: "頭皮／額部壓痛", textEn: "Scalp/temporal tenderness." },
-      { id: "ros_jaw_claudication", label: "咙嗼時下顎疼痛（下顎跚行）", textEn: "Jaw claudication with chewing." }
+      { id: "ros_scalp_tenderness", label: "頭皮／顳部壓痛", textEn: "Scalp/temporal tenderness." },
+      { id: "ros_jaw_claudication", label: "咀嚼時下顎疼痛（下顎跛行）", textEn: "Jaw claudication with chewing." }
     ],
     redFlags: [
       { id: "rf_thunder", label: "雷擊樣頭痛（數秒內達到最痛，疑似蜘蛛網膜下腔出血）", textEn: "Thunderclap headache reaching maximal intensity within seconds (concern for subarachnoid hemorrhage)" },
@@ -447,10 +447,10 @@ const COMPLAINTS = {
       { id: "ros_melena_hematochezia", label: "血便或黑便", textEn: "Associated melena/hematochezia." },
       { id: "ros_hematemesis", label: "吐血", textEn: "Associated hematemesis." },
       { id: "ros_bowel_change", label: "排便習慣改變", textEn: "Recent change in bowel habits." },
-      { id: "ros_urinary_symptoms", label: "泋尿道症狀", textEn: "Associated urinary symptoms." },
+      { id: "ros_urinary_symptoms", label: "泌尿道症狀", textEn: "Associated urinary symptoms." },
       { id: "ros_vaginal_bleeding", label: "異常陰道出血", textEn: "Associated abnormal vaginal bleeding." },
-      { id: "ros_anorexia_weight_loss", label: "食欲不振／體重減輕", textEn: "Associated anorexia/unintentional weight loss." },
-      { id: "ros_jaundice", label: "黃疍", textEn: "Associated jaundice." }
+      { id: "ros_anorexia_weight_loss", label: "食慾不振／體重減輕", textEn: "Associated anorexia/unintentional weight loss." },
+      { id: "ros_jaundice", label: "黃疸", textEn: "Associated jaundice." }
     ],
     redFlags: [
       { id: "rf_peritonitis", label: "板狀腹、反彈痛（疑似腹膜炎）", textEn: "Board-like rigidity with rebound tenderness (concern for peritonitis)" },
