@@ -1,0 +1,811 @@
+<title>主訴問診工具</title>
+<style>
+  :root {
+    --red: #c0392b;
+    --red-bg: #fdecea;
+    --red-border: #e57373;
+    --blue: #2563eb;
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --border: #e0e0e0;
+    --text: #222;
+    --muted: #777;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Microsoft JhengHei", "PingFang TC", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+  #sidebar {
+    width: 180px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    flex-shrink: 0;
+  }
+  #sidebar h1 {
+    font-size: 15px;
+    margin: 0 16px 12px;
+    color: var(--muted);
+  }
+  .complaint-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text);
+    border-left: 3px solid transparent;
+  }
+  .complaint-btn:hover { background: #f0f2f5; }
+  .complaint-btn.active {
+    border-left-color: var(--blue);
+    background: #eef3ff;
+    font-weight: bold;
+    color: var(--blue);
+  }
+  #main {
+    flex: 1;
+    padding: 24px 32px;
+    max-width: 1000px;
+  }
+  #placeholder {
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: 40px;
+  }
+  h2.complaint-title {
+    margin-top: 0;
+  }
+  .panels {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 320px;
+  }
+  .panel h3 {
+    margin-top: 0;
+    font-size: 16px;
+  }
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 14px;
+    gap: 12px;
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-item .label { flex: 1; }
+  .toggle-group { display: flex; gap: 10px; flex-shrink: 0; }
+  .toggle-group label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  #historyManualWrap {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  #historyManualWrap label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  #historyManualNotes {
+    width: 100%;
+    min-height: 60px;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    resize: vertical;
+  }
+  #redflag-panel {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+  }
+  #redflag-panel h3 { color: var(--red); }
+  .redflag-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--red-border);
+    font-size: 14px;
+    color: var(--red);
+  }
+  .redflag-item:last-child { border-bottom: none; }
+  .redflag-item input { margin-top: 3px; flex-shrink: 0; }
+  #soap-section {
+    margin-top: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  #soap-section h3 { margin-top: 0; margin-bottom: 4px; }
+  #soap-section .hint {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  #apiKeySettings {
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    background: #fafafa;
+  }
+  #apiKeySettings summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 8px 0;
+  }
+  #apiKeySettings .apiKeyBody {
+    padding: 4px 0 12px;
+  }
+  #apiKeySettings .apiKeyBody p {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 4px 0 10px;
+  }
+  #apiKeyRow {
+    display: flex;
+    gap: 8px;
+  }
+  #apiKeyInput {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  #apiKeyStatus {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  #manualSupplement {
+    width: 100%;
+    min-height: 60px;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    resize: vertical;
+  }
+  .soap-actions {
+    margin: 12px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  button.action {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  button.action.secondary {
+    background: #6b7280;
+  }
+  button.action:hover { opacity: 0.9; }
+  #soapOutput {
+    width: 100%;
+    min-height: 380px;
+    font-family: "Consolas", monospace;
+    font-size: 13.5px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    white-space: pre-wrap;
+    resize: vertical;
+  }
+  #copyStatus {
+    font-size: 13px;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+</style>
+
+<div id="sidebar">
+  <h1>主訴</h1>
+  <button class="complaint-btn" data-key="chest">胸痛</button>
+  <button class="complaint-btn" data-key="headache">頭痛</button>
+  <button class="complaint-btn" data-key="abdomen">腹痛</button>
+</div>
+
+<div id="main">
+  <div id="placeholder">請從左側選單選擇主訴</div>
+  <div id="content" style="display:none;">
+    <h2 class="complaint-title" id="complaintTitle"></h2>
+    <div class="panels">
+      <div class="panel" id="history-panel">
+        <h3>病史詢問 checklist</h3>
+        <div id="historyList"></div>
+        <div id="historyManualWrap">
+          <label for="historyManualNotes">其他病史（手動輸入，會併入 S 段落）：</label>
+          <textarea id="historyManualNotes" placeholder="checklist 沒涵蓋到的病史細節..."></textarea>
+        </div>
+      </div>
+      <div class="panel" id="redflag-panel">
+        <h3>⚠ Red Flags</h3>
+        <div id="redflagList"></div>
+      </div>
+    </div>
+
+    <div id="soap-section">
+      <h3>SOAP 病例產生（英文）</h3>
+      <div class="hint">會依勾選內容自動產生英文 SOAP 病例，並列出最可能診斷、鑑別診斷、建議檢查與治療（僅供參考，仍需臨床判斷）</div>
+
+      <details id="apiKeySettings">
+        <summary>翻譯設定：Google Gemini API Key（免費，手動補充欄位如果打中文，會用這組 key 呼叫 Gemini 翻成醫學英文）</summary>
+        <div class="apiKeyBody">
+          <p>
+            這組 key 只會存在你這台電腦的瀏覽器裡（localStorage），翻譯時會直接從瀏覽器送到 Google 的 API，不會經過任何中間伺服器。
+            key 可以到 aistudio.google.com 申請，免費、不需要信用卡。
+            如果不填 key，手動補充欄位的文字會照你打的原樣併入病例（不會自動翻譯）。<br>
+            換一台電腦或換瀏覽器使用時，這組 key 不會自動同步過去，需要重新貼上一次。
+          </p>
+          <div id="apiKeyRow">
+            <input type="password" id="apiKeyInput" placeholder="Gemini API key">
+            <button class="action secondary" id="saveKeyBtn">儲存</button>
+            <span id="apiKeyStatus"></span>
+          </div>
+        </div>
+      </details>
+
+      <label for="manualSupplement" style="font-size:14px; color:var(--muted);">手動補充（會加入 S 段落）：</label>
+      <textarea id="manualSupplement" placeholder="輸入其他病史細節、身體檢查發現等..."></textarea>
+      <div class="soap-actions">
+        <button class="action" id="generateBtn">產生 SOAP 病例</button>
+        <button class="action secondary" id="copyBtn">複製到剪貼簿</button>
+        <span id="copyStatus"></span>
+      </div>
+      <textarea id="soapOutput" placeholder="按「產生 SOAP 病例」後這裡會顯示結果，也可以直接手動編輯"></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+const COMPLAINTS = {
+  chest: {
+    name: "胸痛",
+    nameEn: "chest pain",
+    exam: ["Vitals (BP both arms, HR, RR, SpO2, Temp):", "General appearance:", "Cardiovascular exam:", "Respiratory exam:", "Extremities (edema, pulses):"],
+    history: [
+      { id: "onset_sudden", label: "是否為突然發作", pos: "The pain had a sudden onset.", neg: "The pain had a gradual onset." },
+      { id: "radiate", label: "是否放射到左手臂或下顎", pos: "Pain radiates to the left arm/jaw.", neg: "No radiation of pain to the left arm/jaw." },
+      { id: "diaphoresis", label: "是否合併冒冷汗", pos: "Associated diaphoresis.", neg: "Denies diaphoresis." },
+      { id: "dyspnea", label: "是否合併呼吸困難", pos: "Associated dyspnea.", neg: "Denies dyspnea." },
+      { id: "nausea", label: "是否合併噁心／嘔吐", pos: "Associated nausea/vomiting.", neg: "Denies nausea/vomiting." },
+      { id: "palpitation", label: "是否合併心悸", pos: "Associated palpitations.", neg: "Denies palpitations." },
+      { id: "positional", label: "姿勢或呼吸是否影響疼痛", pos: "Pain is affected by position or respiration (suggestive of pleuritic/musculoskeletal origin).", neg: "Pain is not affected by position or respiration." },
+      { id: "postprandial", label: "是否進食後產生或加重", pos: "Pain is related to meals (suggestive of GI origin).", neg: "Pain is not related to meals." },
+      { id: "exertional", label: "是否於運動/用力時誘發", pos: "Pain is provoked by exertion.", neg: "Pain is not related to exertion." },
+      { id: "anticoagulant", label: "是否服用抗凝血劑", pos: "Currently on anticoagulant therapy.", neg: "Denies anticoagulant use." }
+    ],
+    redFlags: [
+      { id: "rf_dissection", text: "劇烈撕裂樣疼痛，合併兩側血壓不對稱（疑主動脈剝離）", textEn: "Tearing chest pain with blood pressure discrepancy between arms (concern for aortic dissection)" },
+      { id: "rf_acs", text: "合併冒冷汗、噁心、放射至左臂或下顎（疑似急性冠心症）", textEn: "Diaphoresis, nausea, and radiation to the left arm/jaw (concern for acute coronary syndrome)" },
+      { id: "rf_pe", text: "合併呼吸困難、單側下肢腫脹（疑似肺栓塞）", textEn: "Dyspnea with unilateral leg swelling (concern for pulmonary embolism)" },
+      { id: "rf_vitals", text: "生命徵象不穩定（低血壓、心搏過速）", textEn: "Hemodynamic instability (hypotension, tachycardia)" },
+      { id: "rf_syncope", text: "合併意識改變或暈厥", textEn: "Altered mental status or syncope" },
+      { id: "rf_cad", text: "已知冠心病史或多重心血管危險因子", textEn: "Known coronary artery disease or multiple cardiovascular risk factors" }
+    ]
+  },
+  headache: {
+    name: "頭痛",
+    nameEn: "headache",
+    exam: ["Vitals (BP, HR, RR, Temp):", "General appearance:", "Neurological exam (mental status, cranial nerves, motor/sensory):", "Neck exam (meningismus):", "Fundoscopic exam:"],
+    history: [
+      { id: "thunderclap", label: "是否為突發劇烈頭痛（雷擊樣）", pos: "Sudden, severe onset (thunderclap headache).", neg: "Gradual onset, not thunderclap in nature." },
+      { id: "fever", label: "是否合併發燒", pos: "Associated fever.", neg: "Denies fever." },
+      { id: "neck_stiff", label: "是否合併頸部僵硬", pos: "Associated neck stiffness.", neg: "Denies neck stiffness." },
+      { id: "vomit", label: "是否合併嘔吐", pos: "Associated vomiting.", neg: "Denies vomiting." },
+      { id: "vision", label: "是否合併視力改變", pos: "Associated visual changes.", neg: "Denies visual changes." },
+      { id: "postural", label: "姿勢改變是否誘發或加重", pos: "Aggravated or triggered by positional change.", neg: "Not affected by positional change." },
+      { id: "valsalva", label: "咳嗽／用力是否加重", pos: "Aggravated by coughing or straining (Valsalva).", neg: "Not aggravated by coughing or straining." },
+      { id: "trauma", label: "近期是否有頭部外傷", pos: "Recent head trauma.", neg: "Denies recent head trauma." },
+      { id: "anticoagulant_h", label: "是否服用抗凝血劑", pos: "Currently on anticoagulant therapy.", neg: "Denies anticoagulant use." },
+      { id: "night_wake", label: "是否會半夜痛醒", pos: "Wakes the patient from sleep.", neg: "Does not wake the patient from sleep." }
+    ],
+    redFlags: [
+      { id: "rf_thunder", text: "雷擊樣頭痛（數秒內達到最痛，疑似蜘蛛網膜下腔出血）", textEn: "Thunderclap headache reaching maximal intensity within seconds (concern for subarachnoid hemorrhage)" },
+      { id: "rf_meningitis", text: "發燒合併頸部僵硬（疑似腦膜炎）", textEn: "Fever with neck stiffness (concern for meningitis)" },
+      { id: "rf_neuro", text: "意識改變或神經學症狀（無力、麻木、言語不清）", textEn: "Altered mental status or focal neurologic deficits (weakness, numbness, dysarthria)" },
+      { id: "rf_age", text: "50 歲以上新發頭痛", textEn: "New-onset headache in a patient older than 50 years" },
+      { id: "rf_cancer", text: "已知癌症病史或免疫低下", textEn: "Known malignancy or immunocompromised state" },
+      { id: "rf_trauma_h", text: "頭部外傷後出現頭痛", textEn: "Headache following head trauma" },
+      { id: "rf_pregnancy", text: "懷孕或產後婦女新發頭痛", textEn: "New-onset headache during pregnancy or the postpartum period" }
+    ]
+  },
+  abdomen: {
+    name: "腹痛",
+    nameEn: "abdominal pain",
+    exam: ["Vitals (BP, HR, RR, Temp):", "General appearance:", "Abdominal exam (tenderness, guarding, rebound, bowel sounds):", "Pelvic/rectal exam (if indicated):"],
+    history: [
+      { id: "migrating", label: "疼痛是否有轉移位置", pos: "Pain has migrated (e.g., periumbilical to right lower quadrant).", neg: "Pain location has remained constant." },
+      { id: "fever_a", label: "是否合併發燒", pos: "Associated fever.", neg: "Denies fever." },
+      { id: "nausea_a", label: "是否合併噁心／嘔吐", pos: "Associated nausea/vomiting.", neg: "Denies nausea/vomiting." },
+      { id: "melena", label: "是否合併血便或黑便", pos: "Associated melena/hematochezia.", neg: "Denies melena/hematochezia." },
+      { id: "hematemesis", label: "是否合併吐血", pos: "Associated hematemesis.", neg: "Denies hematemesis." },
+      { id: "pregnancy", label: "（女性）是否有懷孕可能或停經史", pos: "Possible pregnancy / abnormal menstrual history.", neg: "No possibility of pregnancy; menstrual history unremarkable." },
+      { id: "food_related", label: "進食是否會加重或緩解", pos: "Pain is related to meals.", neg: "Pain is not related to meals." },
+      { id: "bowel_habit", label: "排便習慣是否改變", pos: "Recent change in bowel habits.", neg: "No change in bowel habits." },
+      { id: "surgery", label: "近期是否有腹部手術史", pos: "Recent abdominal surgery.", neg: "Denies recent abdominal surgery." },
+      { id: "nsaid", label: "是否服用抗凝血劑或 NSAID", pos: "Currently on anticoagulant or NSAID therapy.", neg: "Denies anticoagulant or NSAID use." }
+    ],
+    redFlags: [
+      { id: "rf_peritonitis", text: "板狀腹、反彈痛（疑似腹膜炎）", textEn: "Board-like rigidity with rebound tenderness (concern for peritonitis)" },
+      { id: "rf_shock", text: "劇痛合併血壓下降、心搏過速（疑似休克）", textEn: "Severe pain with hypotension and tachycardia (concern for shock)" },
+      { id: "rf_gibleed", text: "合併吐血或血便", textEn: "Hematemesis or melena/hematochezia" },
+      { id: "rf_ectopic", text: "懷孕測試陽性合併腹痛（需排除子宮外孕）", textEn: "Positive pregnancy test with abdominal pain (rule out ectopic pregnancy)" },
+      { id: "rf_ischemia", text: "老年人合併腹痛與血管疾病史（疑似腸繫膜缺血）", textEn: "Elderly patient with vascular disease history (concern for mesenteric ischemia)" },
+      { id: "rf_unclear_fever", text: "合併不明原因發燒與腹痛", textEn: "Unexplained fever with abdominal pain" }
+    ]
+  }
+};
+
+const CONDITIONS = {
+  chest: [
+    {
+      name: "Acute Coronary Syndrome (ACS)",
+      criteria: [
+        { kind: "history", id: "radiate", value: "pos", weight: 2 },
+        { kind: "history", id: "diaphoresis", value: "pos", weight: 2 },
+        { kind: "history", id: "nausea", value: "pos", weight: 1 },
+        { kind: "history", id: "exertional", value: "pos", weight: 1 },
+        { kind: "redflag", id: "rf_acs", weight: 4 },
+        { kind: "redflag", id: "rf_cad", weight: 2 },
+        { kind: "redflag", id: "rf_vitals", weight: 1 }
+      ],
+      workup: ["12-lead ECG", "Serial cardiac troponin", "Chest X-ray", "Consider cardiology consult"],
+      treatment: ["Aspirin 325 mg (if no contraindication)", "Oxygen if SpO2 < 94%", "Sublingual nitroglycerin if no contraindication", "Urgent transfer to ED/cardiology"]
+    },
+    {
+      name: "Aortic Dissection",
+      criteria: [
+        { kind: "history", id: "onset_sudden", value: "pos", weight: 2 },
+        { kind: "redflag", id: "rf_dissection", weight: 5 },
+        { kind: "redflag", id: "rf_vitals", weight: 2 }
+      ],
+      workup: ["CT angiography of chest/abdomen", "Blood pressure measurement in both arms", "Chest X-ray (widened mediastinum)"],
+      treatment: ["Emergent surgical/cardiothoracic consult", "IV beta-blocker for heart rate and blood pressure control", "Immediate transfer to a tertiary center"]
+    },
+    {
+      name: "Pulmonary Embolism",
+      criteria: [
+        { kind: "history", id: "dyspnea", value: "pos", weight: 2 },
+        { kind: "redflag", id: "rf_pe", weight: 5 }
+      ],
+      workup: ["D-dimer", "CT pulmonary angiography", "ECG", "Lower extremity venous Doppler ultrasound"],
+      treatment: ["Oxygen support", "Anticoagulation per protocol if confirmed", "Urgent referral to ED"]
+    },
+    {
+      name: "Musculoskeletal Chest Pain",
+      criteria: [
+        { kind: "history", id: "positional", value: "pos", weight: 2 },
+        { kind: "history", id: "exertional", value: "neg", weight: 1 },
+        { kind: "history", id: "radiate", value: "neg", weight: 1 }
+      ],
+      workup: ["Usually a clinical diagnosis", "Chest X-ray if trauma history"],
+      treatment: ["NSAIDs", "Activity modification", "Reassurance"]
+    },
+    {
+      name: "Gastroesophageal Reflux Disease (GERD)",
+      criteria: [
+        { kind: "history", id: "postprandial", value: "pos", weight: 2 },
+        { kind: "history", id: "positional", value: "neg", weight: 1 }
+      ],
+      workup: ["Clinical diagnosis", "Trial of PPI", "EGD if refractory or alarm features present"],
+      treatment: ["PPI trial", "Lifestyle and dietary modification"]
+    }
+  ],
+  headache: [
+    {
+      name: "Subarachnoid Hemorrhage",
+      criteria: [
+        { kind: "history", id: "thunderclap", value: "pos", weight: 3 },
+        { kind: "redflag", id: "rf_thunder", weight: 5 }
+      ],
+      workup: ["Non-contrast CT head", "Lumbar puncture if CT negative (xanthochromia)", "CT angiography head if aneurysm suspected"],
+      treatment: ["Emergent neurosurgical consult", "Blood pressure control", "Immediate transfer to ED"]
+    },
+    {
+      name: "Meningitis",
+      criteria: [
+        { kind: "history", id: "fever", value: "pos", weight: 2 },
+        { kind: "history", id: "neck_stiff", value: "pos", weight: 2 },
+        { kind: "redflag", id: "rf_meningitis", weight: 5 }
+      ],
+      workup: ["CT head prior to LP if indicated", "Lumbar puncture", "Blood cultures", "CBC"],
+      treatment: ["Empiric IV antibiotics ± dexamethasone", "Emergent transfer to ED"]
+    },
+    {
+      name: "Space-Occupying Lesion / Idiopathic Intracranial Hypertension",
+      criteria: [
+        { kind: "history", id: "postural", value: "pos", weight: 2 },
+        { kind: "history", id: "valsalva", value: "pos", weight: 2 },
+        { kind: "history", id: "vomit", value: "pos", weight: 1 },
+        { kind: "history", id: "night_wake", value: "pos", weight: 1 },
+        { kind: "redflag", id: "rf_age", weight: 2 },
+        { kind: "redflag", id: "rf_cancer", weight: 3 }
+      ],
+      workup: ["MRI brain", "Fundoscopic exam for papilledema"],
+      treatment: ["Neurology referral", "Consider LP opening pressure if IIH suspected"]
+    },
+    {
+      name: "Giant Cell (Temporal) Arteritis",
+      criteria: [
+        { kind: "history", id: "vision", value: "pos", weight: 1 },
+        { kind: "redflag", id: "rf_age", weight: 2 }
+      ],
+      workup: ["ESR/CRP", "Temporal artery biopsy"],
+      treatment: ["High-dose corticosteroids started urgently to prevent vision loss", "Rheumatology referral"]
+    },
+    {
+      name: "Migraine",
+      criteria: [
+        { kind: "history", id: "vision", value: "pos", weight: 1 },
+        { kind: "history", id: "thunderclap", value: "neg", weight: 1 },
+        { kind: "history", id: "postural", value: "neg", weight: 1 }
+      ],
+      workup: ["Clinical diagnosis", "Neuroimaging only if atypical features present"],
+      treatment: ["NSAIDs/triptans", "Antiemetics as needed", "Trigger avoidance"]
+    },
+    {
+      name: "Tension-Type Headache",
+      criteria: [
+        { kind: "history", id: "fever", value: "neg", weight: 1 },
+        { kind: "history", id: "neck_stiff", value: "neg", weight: 1 },
+        { kind: "history", id: "thunderclap", value: "neg", weight: 1 },
+        { kind: "history", id: "vomit", value: "neg", weight: 1 }
+      ],
+      workup: ["No imaging indicated if no red flags present"],
+      treatment: ["NSAIDs/acetaminophen", "Stress management"]
+    }
+  ],
+  abdomen: [
+    {
+      name: "Acute Appendicitis",
+      criteria: [
+        { kind: "history", id: "migrating", value: "pos", weight: 2 },
+        { kind: "history", id: "fever_a", value: "pos", weight: 1 },
+        { kind: "history", id: "nausea_a", value: "pos", weight: 1 },
+        { kind: "redflag", id: "rf_peritonitis", weight: 3 }
+      ],
+      workup: ["CBC", "CRP", "Abdominal/pelvic ultrasound or CT", "Surgical consult"],
+      treatment: ["NPO", "IV fluids", "Surgical consult for appendectomy", "Antibiotics per protocol"]
+    },
+    {
+      name: "Ectopic Pregnancy",
+      criteria: [
+        { kind: "history", id: "pregnancy", value: "pos", weight: 3 },
+        { kind: "redflag", id: "rf_ectopic", weight: 5 }
+      ],
+      workup: ["Urine/serum beta-hCG", "Transvaginal ultrasound", "Type & screen"],
+      treatment: ["Emergent OB-GYN consult", "Consider methotrexate vs. surgical management"]
+    },
+    {
+      name: "Upper GI Bleed / Peptic Ulcer Disease",
+      criteria: [
+        { kind: "history", id: "melena", value: "pos", weight: 2 },
+        { kind: "history", id: "hematemesis", value: "pos", weight: 2 },
+        { kind: "history", id: "nsaid", value: "pos", weight: 1 },
+        { kind: "redflag", id: "rf_gibleed", weight: 4 }
+      ],
+      workup: ["CBC", "Coagulation panel", "Type & crossmatch", "Upper endoscopy"],
+      treatment: ["IV proton pump inhibitor", "Fluid resuscitation", "GI consult", "Hold anticoagulants/NSAIDs"]
+    },
+    {
+      name: "Mesenteric Ischemia",
+      criteria: [
+        { kind: "redflag", id: "rf_ischemia", weight: 5 }
+      ],
+      workup: ["CT angiography abdomen", "Serum lactate", "CBC"],
+      treatment: ["Emergent surgical consult", "Bowel rest", "IV fluid resuscitation"]
+    },
+    {
+      name: "Perforated Viscus / Peritonitis",
+      criteria: [
+        { kind: "redflag", id: "rf_peritonitis", weight: 5 }
+      ],
+      workup: ["Upright chest X-ray (free air)", "CT abdomen/pelvis", "CBC", "Serum lactate"],
+      treatment: ["NPO", "IV fluids", "Broad-spectrum antibiotics", "Emergent surgical consult"]
+    },
+    {
+      name: "Biliary Colic / Cholecystitis",
+      criteria: [
+        { kind: "history", id: "food_related", value: "pos", weight: 2 },
+        { kind: "history", id: "fever_a", value: "pos", weight: 1 },
+        { kind: "history", id: "nausea_a", value: "pos", weight: 1 }
+      ],
+      workup: ["Abdominal ultrasound (RUQ)", "Liver function tests", "CBC"],
+      treatment: ["Analgesia", "NPO if cholecystitis suspected", "Surgical consult for cholecystectomy if confirmed"]
+    },
+    {
+      name: "Nonspecific Abdominal Pain / Gastroenteritis",
+      criteria: [
+        { kind: "history", id: "bowel_habit", value: "pos", weight: 1 },
+        { kind: "history", id: "migrating", value: "neg", weight: 1 },
+        { kind: "history", id: "fever_a", value: "pos", weight: 1 }
+      ],
+      workup: ["Stool studies if diarrhea present", "Basic labs as clinically indicated"],
+      treatment: ["Supportive care", "Hydration", "Symptomatic treatment"]
+    }
+  ]
+};
+
+let currentKey = null;
+
+document.querySelectorAll(".complaint-btn").forEach(btn => {
+  btn.addEventListener("click", () => selectComplaint(btn.dataset.key));
+});
+
+function selectComplaint(key) {
+  currentKey = key;
+  document.querySelectorAll(".complaint-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.key === key);
+  });
+
+  const data = COMPLAINTS[key];
+  document.getElementById("placeholder").style.display = "none";
+  document.getElementById("content").style.display = "block";
+  document.getElementById("complaintTitle").textContent = "主訴：" + data.name;
+
+  const historyList = document.getElementById("historyList");
+  historyList.innerHTML = "";
+  data.history.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "history-item";
+    row.innerHTML = `
+      <span class="label">${item.label}</span>
+      <span class="toggle-group">
+        <label><input type="radio" name="h_${item.id}" value="pos"> 有</label>
+        <label><input type="radio" name="h_${item.id}" value="neg"> 無</label>
+      </span>
+    `;
+    historyList.appendChild(row);
+  });
+
+  const redflagList = document.getElementById("redflagList");
+  redflagList.innerHTML = "";
+  data.redFlags.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "redflag-item";
+    row.innerHTML = `
+      <input type="checkbox" id="rf_${item.id}" value="${item.id}">
+      <label for="rf_${item.id}">${item.text}</label>
+    `;
+    redflagList.appendChild(row);
+  });
+
+  document.getElementById("historyManualNotes").value = "";
+  document.getElementById("manualSupplement").value = "";
+  document.getElementById("soapOutput").value = "";
+  document.getElementById("copyStatus").textContent = "";
+}
+
+document.getElementById("generateBtn").addEventListener("click", generateSOAP);
+document.getElementById("copyBtn").addEventListener("click", copySOAP);
+
+const API_KEY_STORAGE = "lifeos_gemini_api_key";
+const apiKeyInput = document.getElementById("apiKeyInput");
+const apiKeyStatus = document.getElementById("apiKeyStatus");
+apiKeyInput.value = localStorage.getItem(API_KEY_STORAGE) || "";
+document.getElementById("saveKeyBtn").addEventListener("click", () => {
+  localStorage.setItem(API_KEY_STORAGE, apiKeyInput.value.trim());
+  apiKeyStatus.textContent = "已儲存";
+  setTimeout(() => apiKeyStatus.textContent = "", 2000);
+});
+
+function containsChinese(text) {
+  return /[一-鿿]/.test(text);
+}
+
+async function translateToMedicalEnglish(text) {
+  if (!text || !containsChinese(text)) return text;
+  const apiKey = localStorage.getItem(API_KEY_STORAGE);
+  if (!apiKey) return text + " [未翻譯：請至上方設定 Google Gemini API Key]";
+
+  const resp = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Translate the following clinical note fragment into concise, professional medical English suitable for a SOAP note. Output only the translated text, no quotes, no explanations:\n\n${text}`
+          }]
+        }]
+      })
+    }
+  );
+
+  if (!resp.ok) {
+    const errBody = await resp.text().catch(() => "");
+    throw new Error(`Gemini API error ${resp.status}: ${errBody}`);
+  }
+  const data = await resp.json();
+  const translated = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!translated) throw new Error("Gemini API: no translation returned");
+  return translated.trim();
+}
+
+function scoreConditions(key) {
+  const conditions = CONDITIONS[key] || [];
+  return conditions
+    .map(c => {
+      let score = 0;
+      c.criteria.forEach(cr => {
+        if (cr.kind === "history") {
+          const checked = document.querySelector(`input[name="h_${cr.id}"]:checked`);
+          if (checked && checked.value === cr.value) score += cr.weight;
+        } else {
+          const cb = document.getElementById(`rf_${cr.id}`);
+          if (cb && cb.checked) score += cr.weight;
+        }
+      });
+      return { name: c.name, workup: c.workup, treatment: c.treatment, score };
+    })
+    .filter(c => c.score > 0)
+    .sort((a, b) => b.score - a.score);
+}
+
+async function generateSOAP() {
+  if (!currentKey) return;
+  const data = COMPLAINTS[currentKey];
+
+  const generateBtn = document.getElementById("generateBtn");
+  const originalLabel = generateBtn.textContent;
+
+  const findings = [];
+  data.history.forEach(item => {
+    const checked = document.querySelector(`input[name="h_${item.id}"]:checked`);
+    if (checked) {
+      findings.push(checked.value === "pos" ? item.pos : item.neg);
+    }
+  });
+
+  const activeRedFlags = [];
+  data.redFlags.forEach(item => {
+    const cb = document.getElementById(`rf_${item.id}`);
+    if (cb && cb.checked) activeRedFlags.push(item.textEn);
+  });
+
+  const historyManualRaw = document.getElementById("historyManualNotes").value.trim();
+  const manualRaw = document.getElementById("manualSupplement").value.trim();
+
+  let historyManual = historyManualRaw;
+  let manual = manualRaw;
+
+  if (containsChinese(historyManualRaw) || containsChinese(manualRaw)) {
+    generateBtn.disabled = true;
+    generateBtn.textContent = "翻譯中...";
+    try {
+      [historyManual, manual] = await Promise.all([
+        translateToMedicalEnglish(historyManualRaw),
+        translateToMedicalEnglish(manualRaw)
+      ]);
+    } catch (err) {
+      alert("翻譯失敗，將以原文併入病例。\n" + err.message);
+      historyManual = historyManualRaw;
+      manual = manualRaw;
+    } finally {
+      generateBtn.disabled = false;
+      generateBtn.textContent = originalLabel;
+    }
+  }
+
+  // --- S ---
+  let sText = `Chief Complaint: ${data.nameEn.charAt(0).toUpperCase() + data.nameEn.slice(1)}.\n\n`;
+  sText += "History of Present Illness:\n";
+  sText += findings.length > 0 ? findings.join(" ") : "(No checklist items selected.)";
+  if (historyManual) {
+    sText += " " + historyManual;
+  }
+  if (activeRedFlags.length > 0) {
+    sText += "\n\nPertinent red flag(s) noted: " + activeRedFlags.join("; ") + ".";
+  }
+  if (manual) {
+    sText += "\n\nAdditional notes: " + manual;
+  }
+
+  // --- O ---
+  const oText = data.exam.map(line => line + " ").join("\n");
+
+  // --- A & P ---
+  const scored = scoreConditions(currentKey);
+  let aText, pText;
+
+  if (scored.length === 0) {
+    aText = "No specific diagnosis is suggested based on the current findings. Consider broadening the history and physical examination.";
+    pText = "Diagnostic workup:\n- Obtain vital signs and complete physical examination\n- Order labs/imaging as clinically indicated based on exam findings\n\nTreatment/Management:\n- Symptomatic treatment pending further evaluation";
+  } else {
+    const topScore = scored[0].score;
+    const topConditions = scored.filter(c => c.score === topScore);
+    const differentials = scored.filter(c => c.score !== topScore).slice(0, 4);
+
+    aText = `Most likely diagnosis: ${topConditions.map(c => c.name).join(", ")}\n\n`;
+    if (differentials.length > 0) {
+      aText += "Differential diagnoses:\n" + differentials.map((c, i) => `${i + 1}. ${c.name}`).join("\n");
+    } else {
+      aText += "Differential diagnoses: none ranked below the top diagnosis based on current findings.";
+    }
+
+    const topForPlan = scored.slice(0, 3);
+    const workupSet = [];
+    const treatmentSet = [];
+    topForPlan.forEach(c => {
+      c.workup.forEach(w => { if (!workupSet.includes(w)) workupSet.push(w); });
+      c.treatment.forEach(t => { if (!treatmentSet.includes(t)) treatmentSet.push(t); });
+    });
+
+    pText = "Diagnostic workup:\n" + workupSet.map(w => "- " + w).join("\n");
+    pText += "\n\nTreatment/Management:\n" + treatmentSet.map(t => "- " + t).join("\n");
+  }
+
+  const soapText =
+`S:
+${sText}
+
+O:
+${oText}
+
+A:
+${aText}
+
+(Note: AI-assisted decision-support suggestion based on checked findings only. Clinical correlation, full history/physical exam, and physician judgment are required before finalizing diagnosis or treatment.)
+
+P:
+${pText}
+`;
+
+  document.getElementById("soapOutput").value = soapText;
+  document.getElementById("copyStatus").textContent = "";
+}
+
+function copySOAP() {
+  const output = document.getElementById("soapOutput");
+  const status = document.getElementById("copyStatus");
+  output.select();
+  navigator.clipboard.writeText(output.value).then(() => {
+    status.textContent = "已複製";
+    setTimeout(() => status.textContent = "", 2000);
+  }).catch(() => {
+    document.execCommand("copy");
+    status.textContent = "已複製";
+    setTimeout(() => status.textContent = "", 2000);
+  });
+}
+</script>
