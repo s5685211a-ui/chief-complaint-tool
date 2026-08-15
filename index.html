@@ -104,6 +104,26 @@
   }
   .check-item:last-child { border-bottom: none; }
   .check-item input { margin-top: 3px; flex-shrink: 0; }
+  .ros-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 14px;
+    gap: 12px;
+  }
+  .ros-item:last-child { border-bottom: none; }
+  .ros-item .label { flex: 1; }
+  .ros-toggle-group { display: flex; gap: 10px; flex-shrink: 0; }
+  .ros-toggle-group label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+  }
   .redflag-section .check-item {
     border-bottom-color: var(--red-border);
     color: var(--red);
@@ -360,16 +380,16 @@ const COMPLAINTS = {
       { id: "cc_duration_prolonged", label: "持續超過 20 分鐘未緩解", textEn: "Persisting >20 minutes without relief." }
     ],
     ros: [
-      { id: "ros_dyspnea", label: "呼吸困難", textEn: "Associated dyspnea." },
-      { id: "ros_diaphoresis", label: "冒冷汗", textEn: "Associated diaphoresis." },
-      { id: "ros_nausea", label: "噁心／嘔吐", textEn: "Associated nausea/vomiting." },
-      { id: "ros_palpitation", label: "心悸", textEn: "Associated palpitations." },
-      { id: "ros_syncope", label: "暈厥／暈眩前兆", textEn: "Associated syncope/presyncope." },
-      { id: "ros_cough", label: "咳嗽", textEn: "Associated cough." },
-      { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
-      { id: "ros_leg_swelling", label: "單側下肢腫脹", textEn: "Unilateral leg swelling." },
-      { id: "ros_orthopnea", label: "平躺時呼吸困難（端坐呼吸）", textEn: "Orthopnea (breathlessness lying flat)." },
-      { id: "ros_anxiety_trigger", label: "症狀與壓力／焦慮相關", textEn: "Symptom onset associated with stress/anxiety." }
+      { id: "ros_dyspnea", label: "呼吸困難", pos: "Associated dyspnea.", neg: "Denies dyspnea." },
+      { id: "ros_diaphoresis", label: "冒冷汗", pos: "Associated diaphoresis.", neg: "Denies diaphoresis." },
+      { id: "ros_nausea", label: "噁心／嘔吐", pos: "Associated nausea/vomiting.", neg: "Denies nausea/vomiting." },
+      { id: "ros_palpitation", label: "心悸", pos: "Associated palpitations.", neg: "Denies palpitations." },
+      { id: "ros_syncope", label: "暈厥／暈眩前兆", pos: "Associated syncope/presyncope.", neg: "Denies syncope/presyncope." },
+      { id: "ros_cough", label: "咳嗽", pos: "Associated cough.", neg: "Denies cough." },
+      { id: "ros_fever", label: "發燒", pos: "Associated fever.", neg: "Denies fever." },
+      { id: "ros_leg_swelling", label: "單側下肢腫脹", pos: "Unilateral leg swelling.", neg: "Denies unilateral leg swelling." },
+      { id: "ros_orthopnea", label: "平躺時呼吸困難（端坐呼吸）", pos: "Orthopnea (breathlessness lying flat).", neg: "Denies orthopnea." },
+      { id: "ros_anxiety_trigger", label: "症狀與壓力／焦慮相關", pos: "Symptom onset associated with stress/anxiety.", neg: "Denies association with stress/anxiety." }
     ],
     redFlags: [
       { id: "rf_dissection", label: "劇烈撕裂樣疼痛，合併兩側血壓不對稱（疑主動脈剝離）", textEn: "Tearing chest pain with blood pressure discrepancy between arms (concern for aortic dissection)" },
@@ -400,16 +420,16 @@ const COMPLAINTS = {
       { id: "cc_recurrent_pattern", label: "過去曾有類似模式反覆發作", textEn: "Recurrent episodes with a similar pattern." }
     ],
     ros: [
-      { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
-      { id: "ros_neck_stiff", label: "頸部僵硬", textEn: "Associated neck stiffness." },
-      { id: "ros_vomit", label: "嘔吐", textEn: "Associated vomiting." },
-      { id: "ros_photophobia", label: "畏光", textEn: "Associated photophobia." },
-      { id: "ros_phonophobia", label: "怕吵", textEn: "Associated phonophobia." },
-      { id: "ros_visual_change", label: "視力改變", textEn: "Associated visual changes." },
-      { id: "ros_focal_weakness", label: "局部無力或麻木", textEn: "Associated focal weakness or numbness." },
-      { id: "ros_confusion", label: "意識混亂／改變", textEn: "Associated confusion or altered mental status." },
-      { id: "ros_scalp_tenderness", label: "頭皮／顳部壓痛", textEn: "Scalp/temporal tenderness." },
-      { id: "ros_jaw_claudication", label: "咀嚼時下顎疼痛（下顎跛行）", textEn: "Jaw claudication with chewing." }
+      { id: "ros_fever", label: "發燒", pos: "Associated fever.", neg: "Denies fever." },
+      { id: "ros_neck_stiff", label: "頸部僵硬", pos: "Associated neck stiffness.", neg: "Denies neck stiffness." },
+      { id: "ros_vomit", label: "嘔吐", pos: "Associated vomiting.", neg: "Denies vomiting." },
+      { id: "ros_photophobia", label: "畏光", pos: "Associated photophobia.", neg: "Denies photophobia." },
+      { id: "ros_phonophobia", label: "怕吵", pos: "Associated phonophobia.", neg: "Denies phonophobia." },
+      { id: "ros_visual_change", label: "視力改變", pos: "Associated visual changes.", neg: "Denies visual changes." },
+      { id: "ros_focal_weakness", label: "局部無力或麻木", pos: "Associated focal weakness or numbness.", neg: "Denies focal weakness or numbness." },
+      { id: "ros_confusion", label: "意識混亂／改變", pos: "Associated confusion or altered mental status.", neg: "Denies confusion or altered mental status." },
+      { id: "ros_scalp_tenderness", label: "頭皮／顳部壓痛", pos: "Scalp/temporal tenderness.", neg: "Denies scalp/temporal tenderness." },
+      { id: "ros_jaw_claudication", label: "咀嚼時下顎疼痛（下顎跛行）", pos: "Jaw claudication with chewing.", neg: "Denies jaw claudication." }
     ],
     redFlags: [
       { id: "rf_thunder", label: "雷擊樣頭痛（數秒內達到最痛，疑似蜘蛛網膜下腔出血）", textEn: "Thunderclap headache reaching maximal intensity within seconds (concern for subarachnoid hemorrhage)" },
@@ -442,15 +462,15 @@ const COMPLAINTS = {
       { id: "cc_severity_severe", label: "疼痛程度嚴重（≥7/10）", textEn: "Severe intensity (≥7/10)." }
     ],
     ros: [
-      { id: "ros_fever", label: "發燒", textEn: "Associated fever." },
-      { id: "ros_nausea_vomit", label: "噁心／嘔吐", textEn: "Associated nausea/vomiting." },
-      { id: "ros_melena_hematochezia", label: "血便或黑便", textEn: "Associated melena/hematochezia." },
-      { id: "ros_hematemesis", label: "吐血", textEn: "Associated hematemesis." },
-      { id: "ros_bowel_change", label: "排便習慣改變", textEn: "Recent change in bowel habits." },
-      { id: "ros_urinary_symptoms", label: "泌尿道症狀", textEn: "Associated urinary symptoms." },
-      { id: "ros_vaginal_bleeding", label: "異常陰道出血", textEn: "Associated abnormal vaginal bleeding." },
-      { id: "ros_anorexia_weight_loss", label: "食慾不振／體重減輕", textEn: "Associated anorexia/unintentional weight loss." },
-      { id: "ros_jaundice", label: "黃疸", textEn: "Associated jaundice." }
+      { id: "ros_fever", label: "發燒", pos: "Associated fever.", neg: "Denies fever." },
+      { id: "ros_nausea_vomit", label: "噁心／嘔吐", pos: "Associated nausea/vomiting.", neg: "Denies nausea/vomiting." },
+      { id: "ros_melena_hematochezia", label: "血便或黑便", pos: "Associated melena/hematochezia.", neg: "Denies melena/hematochezia." },
+      { id: "ros_hematemesis", label: "吐血", pos: "Associated hematemesis.", neg: "Denies hematemesis." },
+      { id: "ros_bowel_change", label: "排便習慣改變", pos: "Recent change in bowel habits.", neg: "No change in bowel habits." },
+      { id: "ros_urinary_symptoms", label: "泌尿道症狀", pos: "Associated urinary symptoms.", neg: "Denies urinary symptoms." },
+      { id: "ros_vaginal_bleeding", label: "異常陰道出血", pos: "Associated abnormal vaginal bleeding.", neg: "Denies abnormal vaginal bleeding." },
+      { id: "ros_anorexia_weight_loss", label: "食慾不振／體重減輕", pos: "Associated anorexia/unintentional weight loss.", neg: "Denies anorexia or weight loss." },
+      { id: "ros_jaundice", label: "黃疸", pos: "Associated jaundice.", neg: "Denies jaundice." }
     ],
     redFlags: [
       { id: "rf_peritonitis", label: "板狀腹、反彈痛（疑似腹膜炎）", textEn: "Board-like rigidity with rebound tenderness (concern for peritonitis)" },
@@ -687,6 +707,23 @@ function renderChecklist(containerId, items) {
   });
 }
 
+function renderRosList(containerId, items) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  items.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "ros-item";
+    row.innerHTML = `
+      <span class="label">${item.label}</span>
+      <span class="ros-toggle-group">
+        <label><input type="radio" name="${item.id}" value="pos"> 有</label>
+        <label><input type="radio" name="${item.id}" value="neg"> 無</label>
+      </span>
+    `;
+    el.appendChild(row);
+  });
+}
+
 function selectComplaint(key) {
   currentKey = key;
   document.querySelectorAll(".complaint-btn").forEach(b => {
@@ -699,7 +736,7 @@ function selectComplaint(key) {
   document.getElementById("complaintTitle").textContent = "主訴：" + data.name;
 
   renderChecklist("ccList", data.cc);
-  renderChecklist("rosList", data.ros);
+  renderRosList("rosList", data.ros);
   renderChecklist("redflagList", data.redFlags);
   renderChecklist("pmhList", SHARED.pmh);
   renderChecklist("fhList", SHARED.fh);
@@ -767,14 +804,33 @@ function collectChecked(items) {
   }).map(it => it.textEn);
 }
 
+function collectRosFindings(items) {
+  const results = [];
+  items.forEach(item => {
+    const checked = document.querySelector(`input[name="${item.id}"]:checked`);
+    if (checked) {
+      results.push(checked.value === "pos" ? item.pos : item.neg);
+    }
+  });
+  return results;
+}
+
+function isCriteriaMet(id) {
+  if (id.startsWith("ros_")) {
+    const checked = document.querySelector(`input[name="${id}"]:checked`);
+    return !!checked && checked.value === "pos";
+  }
+  const el = document.getElementById(id);
+  return !!el && el.checked;
+}
+
 function scoreConditions(key) {
   const conditions = CONDITIONS[key] || [];
   return conditions
     .map(c => {
       let score = 0;
       c.criteria.forEach(cr => {
-        const el = document.getElementById(cr.id);
-        if (el && el.checked) score += cr.weight;
+        if (isCriteriaMet(cr.id)) score += cr.weight;
       });
       return { name: c.name, workup: c.workup, treatment: c.treatment, score };
     })
@@ -790,7 +846,7 @@ async function generateSOAP() {
   const originalLabel = generateBtn.textContent;
 
   const ccFindings = collectChecked(data.cc);
-  const rosFindings = collectChecked(data.ros);
+  const rosFindings = collectRosFindings(data.ros);
   const rfFindings = collectChecked(data.redFlags);
   const pmhFindings = collectChecked(SHARED.pmh);
   const fhFindings = collectChecked(SHARED.fh);
