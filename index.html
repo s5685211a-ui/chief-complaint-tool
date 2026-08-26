@@ -231,6 +231,7 @@
   <button class="complaint-btn" data-key="chest">胸痛</button>
   <button class="complaint-btn" data-key="headache">頭痛</button>
   <button class="complaint-btn" data-key="abdomen">腹痛</button>
+  <button class="complaint-btn" data-key="weight_loss">體重減輕</button>
 </div>
 
 <div id="main">
@@ -480,6 +481,52 @@ const COMPLAINTS = {
       { id: "rf_ischemia", label: "老年人合併腹痛與血管疾病史（疑似腸繫膜缺血）", textEn: "Elderly patient with vascular disease history (concern for mesenteric ischemia)" },
       { id: "rf_unclear_fever", label: "合併不明原因發燒與腹痛", textEn: "Unexplained fever with abdominal pain" }
     ]
+  },
+  weight_loss: {
+    name: "體重減輕",
+    nameEn: "unintentional weight loss",
+    exam: ["Vitals (BP, HR, RR, Temp, weight trend):", "General appearance (cachexia, pallor):", "Neck exam (thyroid, lymphadenopathy):", "Cardiovascular exam:", "Respiratory exam:", "Abdominal exam (mass, organomegaly):", "Neurological exam (tremor, gait, cognition):", "Lymph node exam:", "Skin exam:"],
+    cc: [
+      { id: "cc_amount_significant", label: "6 個月內體重減輕超過 5% 或更多（非刻意）", textEn: "Unintentional weight loss of more than 5% of body weight over 6 months." },
+      { id: "cc_duration_gradual", label: "逐漸減輕（數月）", textEn: "Gradual weight loss over several months." },
+      { id: "cc_duration_rapid", label: "快速減輕（數週內）", textEn: "Rapid weight loss over the course of weeks." },
+      { id: "cc_unintentional", label: "否認刻意節食或增加運動量", textEn: "Denies intentional dieting or increased exercise." },
+      { id: "cc_appetite_decreased", label: "食慾下降", textEn: "Decreased appetite." },
+      { id: "cc_appetite_increased", label: "食慾正常或增加但仍體重下降", textEn: "Normal or increased appetite despite weight loss." },
+      { id: "cc_intake_reduced", label: "進食量減少", textEn: "Reduced oral intake." },
+      { id: "cc_confirmed_measured", label: "有實際測量記錄佐證（非僅主觀感覺）", textEn: "Weight loss confirmed by measured records, not only subjective impression." },
+      { id: "cc_new_medication", label: "近期新增或調整藥物（降血糖藥、利尿劑、化療藥、甲狀腺素、興奮劑等）", textEn: "Recent new medication or dose adjustment (e.g., hypoglycemic agents, diuretics, chemotherapy, thyroid hormone, stimulants)." }
+    ],
+    ros: [
+      { id: "ros_fever", label: "發燒", pos: "Associated fever.", neg: "Denies fever." },
+      { id: "ros_night_sweats", label: "夜間盜汗", pos: "Associated night sweats.", neg: "Denies night sweats." },
+      { id: "ros_fatigue", label: "疲倦／全身無力", pos: "Associated fatigue/generalized weakness.", neg: "Denies fatigue/generalized weakness." },
+      { id: "ros_dysphagia", label: "吞嚥困難", pos: "Associated dysphagia.", neg: "Denies dysphagia." },
+      { id: "ros_abdominal_pain", label: "腹痛", pos: "Associated abdominal pain.", neg: "Denies abdominal pain." },
+      { id: "ros_bowel_change", label: "排便習慣改變", pos: "Recent change in bowel habits.", neg: "No change in bowel habits." },
+      { id: "ros_melena_hematochezia", label: "血便或黑便", pos: "Associated melena/hematochezia.", neg: "Denies melena/hematochezia." },
+      { id: "ros_heat_intolerance", label: "怕熱／心悸／手抖（疑甲亢）", pos: "Associated heat intolerance/palpitations/tremor (concern for hyperthyroidism).", neg: "Denies heat intolerance, palpitations, or tremor." },
+      { id: "ros_polyuria_polydipsia", label: "多尿／多渴", pos: "Associated polyuria/polydipsia.", neg: "Denies polyuria/polydipsia." },
+      { id: "ros_cough_hemoptysis", label: "慢性咳嗽或咳血", pos: "Associated chronic cough or hemoptysis.", neg: "Denies chronic cough or hemoptysis." },
+      { id: "ros_chronic_cough_sputum", label: "慢性咳嗽合併痰量增加（疑慢性肺病）", pos: "Chronic cough with increased sputum production (concern for chronic pulmonary disease).", neg: "Denies chronic cough with increased sputum." },
+      { id: "ros_dyspnea_exertion", label: "活動時呼吸喘", pos: "Associated exertional dyspnea.", neg: "Denies exertional dyspnea." },
+      { id: "ros_orthopnea_edema", label: "端坐呼吸或下肢水腫（疑心衰竭）", pos: "Associated orthopnea or lower extremity edema (concern for heart failure).", neg: "Denies orthopnea or lower extremity edema." },
+      { id: "ros_frothy_urine_edema", label: "泡沫尿或下肢水腫（疑腎臟病）", pos: "Associated frothy urine or lower extremity edema (concern for renal disease).", neg: "Denies frothy urine or lower extremity edema." },
+      { id: "ros_tremor_rigidity", label: "手抖或動作僵硬遲緩（疑巴金森氏症）", pos: "Associated tremor or bradykinesia/rigidity (concern for Parkinson's disease).", neg: "Denies tremor or bradykinesia/rigidity." },
+      { id: "ros_memory_decline", label: "認知功能減退／記憶力變差", pos: "Associated cognitive decline/memory impairment.", neg: "Denies cognitive decline/memory impairment." },
+      { id: "ros_mood_low", label: "情緒低落／興趣減少", pos: "Associated low mood/anhedonia.", neg: "Denies low mood/anhedonia." },
+      { id: "ros_lymphadenopathy", label: "摸到淋巴結腫大", pos: "Palpable lymphadenopathy noted by patient.", neg: "Denies palpable lymphadenopathy." },
+      { id: "ros_skin_hair_changes", label: "皮膚或毛髮改變", pos: "Associated skin or hair changes.", neg: "Denies skin or hair changes." }
+    ],
+    redFlags: [
+      { id: "rf_b_symptoms", label: "合併發燒、夜間盜汗、體重減輕（B symptoms，疑似淋巴瘤或惡性腫瘤）", textEn: "Fever, night sweats, and weight loss (B symptoms; concern for lymphoma or malignancy)" },
+      { id: "rf_palpable_mass", label: "觸診發現腫塊或淋巴結腫大", textEn: "Palpable mass or lymphadenopathy on examination" },
+      { id: "rf_gi_bleed", label: "合併吐血、血便或黑便", textEn: "Hematemesis, hematochezia, or melena" },
+      { id: "rf_dysphagia_progressive", label: "漸進性吞嚥困難（疑食道癌）", textEn: "Progressive dysphagia (concern for esophageal malignancy)" },
+      { id: "rf_age_smoking", label: "高齡合併長期吸菸史", textEn: "Advanced age with significant smoking history" },
+      { id: "rf_significant_amount", label: "6 個月內體重減輕 >10%", textEn: "Weight loss greater than 10% of body weight within 6 months" },
+      { id: "rf_new_neuro", label: "新發神經學症狀", textEn: "New-onset neurologic symptoms" }
+    ]
   }
 };
 
@@ -683,6 +730,120 @@ const CONDITIONS = {
       ],
       workup: ["Stool studies if diarrhea present", "Basic labs as clinically indicated"],
       treatment: ["Supportive care", "Hydration", "Symptomatic treatment"]
+    }
+  ],
+  weight_loss: [
+    {
+      name: "Occult Malignancy",
+      criteria: [
+        { id: "rf_b_symptoms", weight: 5 },
+        { id: "rf_palpable_mass", weight: 4 },
+        { id: "rf_age_smoking", weight: 2 },
+        { id: "rf_significant_amount", weight: 3 },
+        { id: "cc_amount_significant", weight: 2 },
+        { id: "pmh_cancer", weight: 3 },
+        { id: "ros_fatigue", weight: 1 }
+      ],
+      workup: ["CBC, CMP, LFTs, ESR/CRP", "Age-appropriate cancer screening (colonoscopy, mammogram, low-dose chest CT if smoker)", "CT chest/abdomen/pelvis if red flags present", "Urinalysis"],
+      treatment: ["Referral to oncology or relevant specialist based on findings", "Further imaging/biopsy directed by localizing symptoms"]
+    },
+    {
+      name: "Hyperthyroidism",
+      criteria: [
+        { id: "ros_heat_intolerance", weight: 3 },
+        { id: "pmh_thyroid", weight: 2 },
+        { id: "cc_appetite_increased", weight: 2 }
+      ],
+      workup: ["TSH, free T4"],
+      treatment: ["Endocrinology referral", "Antithyroid medication per specialist guidance"]
+    },
+    {
+      name: "Uncontrolled Diabetes Mellitus",
+      criteria: [
+        { id: "ros_polyuria_polydipsia", weight: 3 },
+        { id: "pmh_dm", weight: 2 }
+      ],
+      workup: ["Fasting glucose, HbA1c"],
+      treatment: ["Optimize glycemic control", "Endocrinology referral if needed"]
+    },
+    {
+      name: "Depression / Psychiatric-Related Weight Loss",
+      criteria: [
+        { id: "ros_mood_low", weight: 3 },
+        { id: "cc_appetite_decreased", weight: 1 },
+        { id: "ps_mood", weight: 2 }
+      ],
+      workup: ["Depression screening (e.g., PHQ-9)", "TSH to rule out organic cause"],
+      treatment: ["Psychiatric referral", "Consider antidepressant therapy and counseling"]
+    },
+    {
+      name: "Gastrointestinal Disease (IBD / Malabsorption)",
+      criteria: [
+        { id: "ros_bowel_change", weight: 2 },
+        { id: "ros_abdominal_pain", weight: 1 },
+        { id: "ros_melena_hematochezia", weight: 2 }
+      ],
+      workup: ["CBC, CRP/ESR", "Celiac serology", "Stool studies", "Endoscopy/colonoscopy if indicated"],
+      treatment: ["GI referral", "Dietary modification per diagnosis"]
+    },
+    {
+      name: "Chronic Infection (e.g., Tuberculosis)",
+      criteria: [
+        { id: "ros_fever", weight: 2 },
+        { id: "ros_night_sweats", weight: 3 },
+        { id: "ros_cough_hemoptysis", weight: 3 },
+        { id: "pmh_immunosuppressed", weight: 1 }
+      ],
+      workup: ["Chest X-ray", "Sputum AFB smear/culture", "HIV test", "IGRA/PPD if TB suspected"],
+      treatment: ["Isolation precautions if active TB suspected", "Infectious disease referral"]
+    },
+    {
+      name: "Congestive Heart Failure / Cardiac Cachexia",
+      criteria: [
+        { id: "pmh_cad_mi", weight: 2 },
+        { id: "ros_dyspnea_exertion", weight: 2 },
+        { id: "ros_orthopnea_edema", weight: 3 }
+      ],
+      workup: ["NT-proBNP or BNP", "Echocardiogram", "ECG", "Chest X-ray"],
+      treatment: ["Optimize guideline-directed heart failure therapy", "Cardiology referral", "Sodium/fluid restriction as appropriate"]
+    },
+    {
+      name: "Neurodegenerative Disease (Parkinson's Disease / Dementia)",
+      criteria: [
+        { id: "ros_tremor_rigidity", weight: 3 },
+        { id: "ros_memory_decline", weight: 2 },
+        { id: "ros_dysphagia", weight: 1 },
+        { id: "pmh_stroke", weight: 1 }
+      ],
+      workup: ["Neurology referral", "Cognitive screening (MMSE/MoCA)", "Brain MRI if indicated", "Swallowing evaluation if dysphagia present"],
+      treatment: ["Neurology referral for further evaluation", "Speech-language pathology consult if dysphagia present", "Dietitian referral for nutritional support"]
+    },
+    {
+      name: "Chronic Pulmonary Disease (COPD)",
+      criteria: [
+        { id: "pmh_asthma_copd", weight: 2 },
+        { id: "ros_chronic_cough_sputum", weight: 2 },
+        { id: "ros_dyspnea_exertion", weight: 1 }
+      ],
+      workup: ["Pulmonary function tests", "Chest X-ray", "Chest CT if indicated"],
+      treatment: ["Optimize inhaled bronchodilator/corticosteroid therapy", "Pulmonology referral", "Pulmonary rehabilitation", "Nutritional support"]
+    },
+    {
+      name: "Chronic Kidney Disease / Uremia",
+      criteria: [
+        { id: "pmh_ckd", weight: 2 },
+        { id: "ros_frothy_urine_edema", weight: 2 }
+      ],
+      workup: ["Serum creatinine/eGFR", "BUN, electrolytes", "Urinalysis"],
+      treatment: ["Nephrology referral", "Dietary protein/phosphate/potassium adjustment as indicated", "Manage underlying cause of CKD"]
+    },
+    {
+      name: "Medication-Induced Weight Loss",
+      criteria: [
+        { id: "cc_new_medication", weight: 4 }
+      ],
+      workup: ["Medication reconciliation", "Correlate weight loss onset with medication start/dose change dates"],
+      treatment: ["Consider dose adjustment or discontinuation of offending medication in consultation with prescriber", "Monitor weight after medication change"]
     }
   ]
 };
